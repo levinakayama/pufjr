@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Churrasco Brasil 🇧🇷 x Noruega 🇳🇴</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7/css/flag-icons.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="stage">
+  <img class="stage-bg" id="stage-bg" src="https://images.unsplash.com/photo-1729843352938-0e10fbf96585?auto=format&fit=crop&w=3200&q=78" alt="">
+  <div class="stage-overlay"></div>
+
+  <header class="stage-nav">
+    <nav class="nav-pill" id="card-nav" aria-label="Ir para etapa">
+      <span class="nav-indicator" id="nav-indicator" aria-hidden="true"></span>
+      <button type="button" class="nav-link active" data-card="0">Info</button>
+      <button type="button" class="nav-link" data-card="1">RSVP</button>
+      <button type="button" class="nav-link" data-card="2">Lista</button>
+      <button type="button" class="nav-link" data-card="3">Bolão</button>
+      <button type="button" class="nav-link" data-card="4">Placar</button>
+    </nav>
+  </header>
+
+  <div class="stage-body">
+    <div class="dot-rail" id="dot-rail" aria-hidden="true">
+      <span class="dot active" data-card="0"></span>
+      <span class="dot" data-card="1"></span>
+      <span class="dot" data-card="2"></span>
+      <span class="dot" data-card="3"></span>
+      <span class="dot" data-card="4"></span>
+    </div>
+
+    <div class="stage-title">
+      <span class="badge"><span class="badge-day">DOM</span><span class="badge-div" aria-hidden="true"></span><span class="badge-time">17H</span></span>
+      <h1 class="hero-title">
+        <span class="line">BRASIL</span>
+        <span class="line accent">× NORUEGA</span>
+      </h1>
+      <p class="subtitle">Churrasco na casa do Rafa. Vem torcer, comer bem e ganhar o bolão.</p>
+
+      <div class="countdown" id="countdown">
+        <div class="countdown-item"><span id="cd-days">00</span><small>dias</small></div>
+        <div class="countdown-item"><span id="cd-hours">00</span><small>horas</small></div>
+        <div class="countdown-item"><span id="cd-min">00</span><small>min</small></div>
+        <div class="countdown-item"><span id="cd-sec">00</span><small>seg</small></div>
+      </div>
+      <p class="countdown-label" id="countdown-label">até a bola rolar</p>
+    </div>
+
+    <div class="card-deck">
+
+      <section class="card active" data-card="0" id="card-info">
+        <div class="card-header">
+          <span class="card-blob blob-a" aria-hidden="true"></span>
+          <span class="card-blob blob-b" aria-hidden="true"></span>
+          <span class="card-flag" aria-hidden="true"><span class="fi fi-br"></span></span>
+        </div>
+        <div class="card-plate">
+          <p class="card-plate-title">Informações</p>
+          <p class="card-plate-sub">01 · Evento</p>
+        </div>
+        <div class="card-body">
+        <ul class="info-list">
+          <li><i class="ti ti-calendar" aria-hidden="true"></i><div><strong>Quando</strong><span>Domingo, 5 de julho</span></div></li>
+          <li><i class="ti ti-clock" aria-hidden="true"></i><div><strong>Chegada</strong><span>13h · churrasco começa cedo</span></div></li>
+          <li><i class="ti ti-ball-football" aria-hidden="true"></i><div><strong>Bola rolando</strong><span>17h</span></div></li>
+          <li><i class="ti ti-map-pin" aria-hidden="true"></i><div><strong>Onde</strong><span>Casa do Rafa — Rua Jaú, 77, Baeta Neves, São Bernardo do Campo/SP</span></div></li>
+        </ul>
+        <div class="actions">
+          <a class="btn btn-outline" href="https://www.google.com/maps/search/?api=1&query=Rua+Ja%C3%BA%2C+77%2C+Baeta+Neves%2C+S%C3%A3o+Bernardo+do+Campo" target="_blank" rel="noopener">
+            <i class="ti ti-map-pin" aria-hidden="true"></i> Ver no mapa
+          </a>
+        </div>
+        </div>
+      </section>
+
+      <section class="card" data-card="1" id="card-rsvp">
+        <div class="card-header">
+          <span class="card-blob blob-a" aria-hidden="true"></span>
+          <span class="card-blob blob-b" aria-hidden="true"></span>
+          <span class="card-flag" aria-hidden="true"><span class="fi fi-no"></span></span>
+        </div>
+        <div class="card-plate">
+          <p class="card-plate-title">Confirmar presença</p>
+          <p class="card-plate-sub">02 · RSVP</p>
+        </div>
+        <div class="card-body">
+        <p class="card-hint">Preenche seu nome e diz se vai vir.</p>
+
+        <label class="field-label" for="nome">Seu nome</label>
+        <input type="text" id="nome" placeholder="Como te chamamos?" required>
+
+        <p class="field-label">Vai vir?</p>
+        <div class="chip-group" id="chips-vem" role="radiogroup" aria-label="Vai vir?">
+          <button type="button" class="chip" data-value="Sim, com certeza!" data-group="vem">
+            <i class="ti ti-mood-smile" aria-hidden="true"></i> Sim, com certeza
+          </button>
+          <button type="button" class="chip" data-value="Talvez" data-group="vem">
+            <i class="ti ti-circle-question" aria-hidden="true"></i> Talvez
+          </button>
+          <button type="button" class="chip" data-value="Não vou conseguir" data-group="vem">
+            <i class="ti ti-mood-sad" aria-hidden="true"></i> Não vou
+          </button>
+        </div>
+
+        <button type="button" class="btn btn-dark card-next-btn" data-goto="2">
+          Escolher o que vou levar <i class="ti ti-arrow-right" aria-hidden="true"></i>
+        </button>
+        </div>
+      </section>
+
+      <section class="card" data-card="2" id="card-lista">
+        <div class="card-header">
+          <span class="card-blob blob-a" aria-hidden="true"></span>
+          <span class="card-blob blob-b" aria-hidden="true"></span>
+          <span class="card-flag" aria-hidden="true"><span class="fi fi-br"></span></span>
+        </div>
+        <div class="card-plate">
+          <p class="card-plate-title">Lista de itens</p>
+          <p class="card-plate-sub">03 · O que vai trazer</p>
+        </div>
+        <div class="card-body">
+        <p class="card-hint warn" id="hint-lista"><i class="ti ti-lock" aria-hidden="true"></i> Preenche nome e confirmação no card RSVP antes de escolher.</p>
+
+        <div class="food-list" id="food-list">
+          <div class="food-group">
+            <p class="food-group-label"><i class="ti ti-chef-hat" aria-hidden="true"></i> Carnes</p>
+            <div class="food-items">
+              <button type="button" class="food-row" data-value="Picanha" data-group="item">Picanha<i class="ti ti-check food-check" aria-hidden="true"></i></button>
+              <button type="button" class="food-row" data-value="Linguiça" data-group="item">Linguiça<i class="ti ti-check food-check" aria-hidden="true"></i></button>
+              <button type="button" class="food-row" data-value="Frango" data-group="item">Frango<i class="ti ti-check food-check" aria-hidden="true"></i></button>
+            </div>
+          </div>
+          <div class="food-group">
+            <p class="food-group-label"><i class="ti ti-beer" aria-hidden="true"></i> Bebidas</p>
+            <div class="food-items">
+              <button type="button" class="food-row" data-value="Cerveja" data-group="item">Cerveja<i class="ti ti-check food-check" aria-hidden="true"></i></button>
+              <button type="button" class="food-row" data-value="Refrigerante" data-group="item">Refrigerante<i class="ti ti-check food-check" aria-hidden="true"></i></button>
+            </div>
+          </div>
+          <div class="food-group">
+            <p class="food-group-label"><i class="ti ti-flame" aria-hidden="true"></i> Estrutura</p>
+            <div class="food-items">
+              <button type="button" class="food-row" data-value="Carvão" data-group="item">Carvão<i class="ti ti-check food-check" aria-hidden="true"></i></button>
+              <button type="button" class="food-row" data-value="Gelo" data-group="item">Gelo<i class="ti ti-check food-check" aria-hidden="true"></i></button>
+            </div>
+          </div>
+          <div class="food-group">
+            <p class="food-group-label"><i class="ti ti-leaf" aria-hidden="true"></i> Acompanhamento</p>
+            <div class="food-items">
+              <button type="button" class="food-row" data-value="Farofa" data-group="item">Farofa<i class="ti ti-check food-check" aria-hidden="true"></i></button>
+              <button type="button" class="food-row" data-value="Salada" data-group="item">Salada<i class="ti ti-check food-check" aria-hidden="true"></i></button>
+              <button type="button" class="food-row" data-value="Pão de alho" data-group="item">Pão de alho<i class="ti ti-check food-check" aria-hidden="true"></i></button>
+            </div>
+          </div>
+          <div class="food-group">
+            <p class="food-group-label"><i class="ti ti-cake" aria-hidden="true"></i> Sobremesa</p>
+            <div class="food-items">
+              <button type="button" class="food-row" data-value="Sobremesa" data-group="item">Sobremesa<i class="ti ti-check food-check" aria-hidden="true"></i></button>
+              <button type="button" class="food-row" data-value="Só a fome mesmo" data-group="item">Só vou levar a fome<i class="ti ti-check food-check" aria-hidden="true"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-dark card-next-btn" data-goto="3">
+          Ir pro bolão <i class="ti ti-arrow-right" aria-hidden="true"></i>
+        </button>
+        </div>
+      </section>
+
+      <section class="card" data-card="3" id="card-bolao">
+        <div class="card-header">
+          <span class="card-blob blob-a" aria-hidden="true"></span>
+          <span class="card-blob blob-b" aria-hidden="true"></span>
+          <span class="card-flag" aria-hidden="true"><span class="fi fi-no"></span></span>
+        </div>
+        <div class="card-plate">
+          <p class="card-plate-title">Seu palpite</p>
+          <p class="card-plate-sub">04 · Bolão</p>
+        </div>
+        <div class="card-body">
+        <p class="card-hint warn" id="hint-bolao"><i class="ti ti-lock" aria-hidden="true"></i> Preenche nome e confirmação no card RSVP antes de enviar.</p>
+
+        <div class="palpite-row">
+          <span class="palpite-time"><span class="fi fi-br" aria-hidden="true"></span> Brasil</span>
+          <input type="number" id="gols-br" min="0" max="20" placeholder="0" inputmode="numeric">
+          <span class="palpite-x">×</span>
+          <input type="number" id="gols-no" min="0" max="20" placeholder="0" inputmode="numeric">
+          <span class="palpite-time">Noruega <span class="fi fi-no" aria-hidden="true"></span></span>
+        </div>
+
+        <div class="actions">
+          <button type="button" id="btn-copiar" class="btn btn-dark" disabled>
+            <i class="ti ti-copy" aria-hidden="true"></i> Copiar confirmação
+          </button>
+          <button type="button" id="btn-enviar" class="btn btn-whatsapp" disabled>
+            <i class="ti ti-brand-whatsapp" aria-hidden="true"></i> Enviar no grupo
+          </button>
+        </div>
+        <p id="copy-feedback" class="feedback" aria-live="polite"></p>
+
+        <p class="card-hint small">Ranking de quem chega mais perto do resultado real:</p>
+        <div class="table-wrap">
+          <table id="ranking-table">
+            <thead><tr><th>Nome</th><th>Palpite</th><th>Dif.</th></tr></thead>
+            <tbody id="ranking-body"></tbody>
+          </table>
+        </div>
+        </div>
+      </section>
+
+      <section class="card" data-card="4" id="card-placar">
+        <div class="card-header">
+          <span class="card-blob blob-a" aria-hidden="true"></span>
+          <span class="card-blob blob-b" aria-hidden="true"></span>
+          <span class="card-flag" aria-hidden="true"><span class="fi fi-br"></span></span>
+        </div>
+        <div class="card-plate">
+          <p class="card-plate-title">Placar</p>
+          <p class="card-plate-sub">05 · Ao vivo</p>
+        </div>
+        <div class="card-body">
+        <p class="card-hint">Atualiza aqui durante o jogo pra galera acompanhar no telão/TV.</p>
+
+        <div class="placar-display">
+          <div class="time-block">
+            <span class="bandeira fi fi-br" aria-hidden="true"></span>
+            <span class="time-nome">Brasil</span>
+            <div class="controls">
+              <button class="ctrl-btn" data-team="br" data-op="-1" aria-label="Diminuir gol do Brasil"><i class="ti ti-minus" aria-hidden="true"></i></button>
+              <span id="score-br" class="score">0</span>
+              <button class="ctrl-btn" data-team="br" data-op="1" aria-label="Aumentar gol do Brasil"><i class="ti ti-plus" aria-hidden="true"></i></button>
+            </div>
+          </div>
+          <div class="vs">×</div>
+          <div class="time-block">
+            <span class="bandeira fi fi-no" aria-hidden="true"></span>
+            <span class="time-nome">Noruega</span>
+            <div class="controls">
+              <button class="ctrl-btn" data-team="no" data-op="-1" aria-label="Diminuir gol da Noruega"><i class="ti ti-minus" aria-hidden="true"></i></button>
+              <span id="score-no" class="score">0</span>
+              <button class="ctrl-btn" data-team="no" data-op="1" aria-label="Aumentar gol da Noruega"><i class="ti ti-plus" aria-hidden="true"></i></button>
+            </div>
+          </div>
+        </div>
+        <button id="btn-reset-placar" class="btn btn-ghost">
+          <i class="ti ti-refresh" aria-hidden="true"></i> Zerar placar
+        </button>
+        </div>
+      </section>
+
+      <div class="card-controls">
+        <button class="ctrl-arrow" id="btn-prev" aria-label="Card anterior"><i class="ti ti-arrow-left" aria-hidden="true"></i></button>
+        <div class="card-counter">
+          <span id="card-current">01</span>
+          <span class="counter-track"><span class="counter-fill" id="counter-fill"></span></span>
+          <span>05</span>
+        </div>
+        <button class="ctrl-arrow" id="btn-next" aria-label="Próximo card"><i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span class="marquee-item"><i class="ti ti-ball-football" aria-hidden="true"></i> DOMINGO 17H</span>
+      <span class="marquee-item">·</span>
+      <span class="marquee-item"><i class="ti ti-chef-hat" aria-hidden="true"></i> CHURRASCO</span>
+      <span class="marquee-item">·</span>
+      <span class="marquee-item"><span class="fi fi-br"></span> BRASIL × NORUEGA <span class="fi fi-no"></span></span>
+      <span class="marquee-item">·</span>
+      <span class="marquee-item"><i class="ti ti-trophy" aria-hidden="true"></i> BORA GALERA</span>
+      <span class="marquee-item">·</span>
+      <span class="marquee-item"><i class="ti ti-ball-football" aria-hidden="true"></i> DOMINGO 17H</span>
+      <span class="marquee-item">·</span>
+      <span class="marquee-item"><i class="ti ti-chef-hat" aria-hidden="true"></i> CHURRASCO</span>
+      <span class="marquee-item">·</span>
+      <span class="marquee-item"><span class="fi fi-br"></span> BRASIL × NORUEGA <span class="fi fi-no"></span></span>
+      <span class="marquee-item">·</span>
+      <span class="marquee-item"><i class="ti ti-trophy" aria-hidden="true"></i> BORA GALERA</span>
+      <span class="marquee-item">·</span>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
