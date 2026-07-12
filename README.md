@@ -41,17 +41,17 @@ Tudo fica centralizado no topo do arquivo `script.js`:
 ```js
 const CONFIG = {
   kickoff: "2026-07-19T16:00:00",   // data/hora da final, horário de Brasília (usado no contador)
-  whatsappGroupLink: "https://chat.whatsapp.com/L2fKSzdX2zdFamIN80Ixfh",
-  pixKeyDisplay: "11 99522-2220 · Levi",  // o que aparece na tela
-  pixKeyCopy: "11995222220",              // o que é copiado ao clicar em "Copiar"
+  whatsappGroupLink: "https://chat.whatsapp.com/SEU_LINK_AQUI",
+  pixKeyDisplay: "...",  // o que aparece na tela
+  pixKeyCopy: "...",     // o que é copiado ao clicar em "Copiar"
   supabaseUrl: "https://ilibvwyupjyblxiwdfvx.supabase.co",
   supabaseAnonKey: "sb_publishable_...",
 };
 ```
 
 - **`kickoff`**: horário oficial da final é 15h (horário do estádio, em Nova Jersey/EUA) — convertido pra horário de Brasília dá **16h**. Ajuste se a FIFA mudar o horário.
-- **`whatsappGroupLink`**: já está com o link real do grupo.
-- **`pixKeyDisplay` / `pixKeyCopy`**: a chave Pix mostrada e copiada no card RSVP.
+- **`whatsappGroupLink`**: link de convite do grupo (WhatsApp → Grupo → Convidar via link). Edite no `script.js`.
+- **`pixKeyDisplay` / `pixKeyCopy`**: chave Pix mostrada e copiada no card RSVP — edite no `script.js` (não coloque valores reais no README).
 
 ## Fluxo de RSVP + Pix (card 2)
 
