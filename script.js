@@ -72,8 +72,8 @@ document.querySelectorAll(".chip").forEach((el) => {
 const pixKeySpan = document.querySelector("#pix-box .pix-key-info span");
 if (pixKeySpan) pixKeySpan.textContent = CONFIG.pixKeyDisplay;
 
-document.getElementById("btn-copiar-pix").addEventListener("click", async () => {
-  const btn = document.getElementById("btn-copiar-pix");
+async function copiarPixKey(btn) {
+  if (!btn) return;
   const original = btn.innerHTML;
   try {
     await navigator.clipboard.writeText(CONFIG.pixKeyCopy);
@@ -89,7 +89,18 @@ document.getElementById("btn-copiar-pix").addEventListener("click", async () => 
   }
   btn.innerHTML = '<i class="ti ti-check" aria-hidden="true"></i> Copiado!';
   setTimeout(() => (btn.innerHTML = original), 2000);
+}
+
+document.getElementById("btn-copiar-pix")?.addEventListener("click", (e) => {
+  copiarPixKey(e.currentTarget);
 });
+
+document.getElementById("btn-copiar-pix-bolao")?.addEventListener("click", (e) => {
+  copiarPixKey(e.currentTarget);
+});
+
+const pixBolaoDisplay = document.getElementById("pix-bolao-display");
+if (pixBolaoDisplay) pixBolaoDisplay.textContent = CONFIG.pixKeyDisplay;
 
 let pago = false;
 const chipPago = document.getElementById("chip-pago");
@@ -111,61 +122,229 @@ const hintPix = document.getElementById("hint-pix");
 const unlockActions = document.getElementById("unlock-actions");
 const hintLista = document.getElementById("hint-lista");
 const hintBolao = document.getElementById("hint-bolao");
+const palpiteScores = { time1: null, time2: null };
+
+function updateConfirmButtonLabel() {
+  if (!btnCopiar) return;
+  const placarPronto = palpiteScores.time1 !== null && palpiteScores.time2 !== null;
+  btnCopiar.innerHTML = placarPronto
+    ? '<i class="ti ti-check" aria-hidden="true"></i> Confirmar palpite'
+    : '<i class="ti ti-ball-football" aria-hidden="true"></i> Escolhe o placar';
+}
 
 function checkUnlock() {
   const confirmouPresenca = selecoes.vem === "Sim, com certeza!";
   if (pixBox) pixBox.classList.toggle("visible", confirmouPresenca);
 
   const pronto = confirmouPresenca && pago && nomeInput.value.trim().length > 0;
+  const placarPronto = palpiteScores.time1 !== null && palpiteScores.time2 !== null;
 
   if (hintPix) hintPix.classList.toggle("visible", !pronto);
   if (unlockActions) unlockActions.classList.toggle("visible", pronto);
-  if (btnCopiar) btnCopiar.disabled = !pronto;
+  if (btnCopiar) btnCopiar.disabled = !(pronto && placarPronto);
   if (hintLista) hintLista.classList.toggle("visible", !pronto);
   if (hintBolao) hintBolao.classList.toggle("visible", !pronto);
+  updateConfirmButtonLabel();
 }
 
 nomeInput.addEventListener("input", checkUnlock);
 checkUnlock();
 
-/* ---------- Bolão: copiar confirmação ---------- */
+/* ---------- Bolão: modal de placar + confirmar palpite ---------- */
 
-function montarMensagem() {
-  const nome = nomeInput.value.trim() || "(sem nome)";
-  const vem = selecoes.vem || "(não respondeu)";
-  const golsTime1 = document.getElementById("gols-time1").value || "0";
-  const golsTime2 = document.getElementById("gols-time2").value || "0";
+const scoreModal = document.getElementById("score-modal");
+const scoreModalTitle = document.getElementById("score-modal-title");
+const scoreModalGrid = document.getElementById("score-modal-grid");
+const palpitesListEl = document.getElementById("palpites-list");
+let scoreModalTarget = null;
+let palpitesCache = [];
 
-  return (
-    `Confirmação — Churrasco da Grande Final\n` +
-    `Nome: ${nome}\n` +
-    `Vou: ${vem}\n` +
-    `Pix (R$20 rateio salão): ${pago ? "pago" : "pendente"}\n` +
-    `Palpite (bolão): ${golsTime1} x ${golsTime2}`
-  );
+function buildScoreGrid() {
+  scoreModalGrid.innerHTML = "";
+  for (let n = 0; n <= 10; n++) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "score-pick";
+    btn.textContent = String(n);
+    btn.dataset.value = String(n);
+    scoreModalGrid.appendChild(btn);
+  }
 }
 
-document.getElementById("btn-copiar").addEventListener("click", async () => {
-  const msg = montarMensagem();
-  const feedback = document.getElementById("copy-feedback");
+function openScoreModal(team) {
+  scoreModalTarget = team;
+  const label = team === "time1" ? "Time 1" : "Time 2";
+  scoreModalTitle.textContent = `Gols — ${label}`;
+  const current = palpiteScores[team];
+  scoreModalGrid.querySelectorAll(".score-pick").forEach((btn) => {
+    btn.classList.toggle("selected", current !== null && btn.dataset.value === String(current));
+  });
+  scoreModal.hidden = false;
+  document.body.classList.add("modal-open");
+}
 
-  try {
-    await navigator.clipboard.writeText(msg);
-  } catch (e) {
-    // fallback pra navegadores sem suporte ao clipboard API
-    const ta = document.createElement("textarea");
-    ta.value = msg;
-    ta.style.position = "fixed";
-    ta.style.opacity = "0";
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand("copy");
-    document.body.removeChild(ta);
+function closeScoreModal() {
+  scoreModal.hidden = true;
+  scoreModalTarget = null;
+  document.body.classList.remove("modal-open");
+}
+
+function setPalpiteScore(team, value) {
+  palpiteScores[team] = value;
+  const btn = document.getElementById(team === "time1" ? "gols-time1" : "gols-time2");
+  if (btn) {
+    btn.textContent = String(value);
+    btn.classList.add("filled");
+  }
+  checkUnlock();
+}
+
+buildScoreGrid();
+
+document.querySelectorAll(".palpite-score").forEach((btn) => {
+  btn.addEventListener("click", () => openScoreModal(btn.dataset.team));
+});
+
+scoreModalGrid.addEventListener("click", (e) => {
+  const pick = e.target.closest(".score-pick");
+  if (!pick || !scoreModalTarget) return;
+  setPalpiteScore(scoreModalTarget, Number(pick.dataset.value));
+  closeScoreModal();
+});
+
+scoreModal.addEventListener("click", (e) => {
+  if (e.target.closest("[data-close-modal]")) closeScoreModal();
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && !scoreModal.hidden) closeScoreModal();
+});
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function renderPalpites() {
+  if (!palpitesListEl) return;
+
+  if (!palpitesCache.length) {
+    palpitesListEl.innerHTML =
+      '<p class="card-hint">Ninguém chutou ainda — confirma o seu pra aparecer aqui.</p>';
+    return;
   }
 
-  feedback.textContent = "Copiado! Agora é só colar no grupo do WhatsApp.";
-  setTimeout(() => (feedback.textContent = ""), 5000);
-});
+  const groupsMap = new Map();
+  palpitesCache.forEach((p) => {
+    const key = `${p.gols_time1}x${p.gols_time2}`;
+    if (!groupsMap.has(key)) {
+      groupsMap.set(key, {
+        gols1: p.gols_time1,
+        gols2: p.gols_time2,
+        nomes: [],
+      });
+    }
+    groupsMap.get(key).nomes.push(p.nome);
+  });
+
+  const groups = [...groupsMap.values()].sort((a, b) => {
+    if (b.nomes.length !== a.nomes.length) return b.nomes.length - a.nomes.length;
+    if (a.gols1 !== b.gols1) return a.gols1 - b.gols1;
+    return a.gols2 - b.gols2;
+  });
+
+  palpitesListEl.innerHTML = groups
+    .map((group) => {
+      const count = group.nomes.length;
+      const label = count === 1 ? "1 pessoa" : `${count} pessoas`;
+      return `
+        <div class="palpite-group">
+          <div class="palpite-group-score">
+            <span class="palpite-group-placar">${group.gols1} × ${group.gols2}</span>
+            <span class="palpite-group-count">${label}</span>
+          </div>
+          <p class="palpite-group-names">${group.nomes.map(escapeHtml).join(", ")}</p>
+        </div>
+      `;
+    })
+    .join("");
+}
+
+async function loadPalpites() {
+  if (!palpitesListEl) return;
+  if (!supabaseClient) {
+    palpitesListEl.innerHTML =
+      '<p class="card-hint">Bolão ainda não conectado ao Supabase.</p>';
+    return;
+  }
+
+  const { data, error } = await supabaseClient
+    .from("palpites")
+    .select("*")
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    console.error(error);
+    palpitesListEl.innerHTML =
+      '<p class="card-hint">Não consegui carregar os palpites. Roda o <code>supabase_palpites.sql</code> no Supabase se ainda não rodou.</p>';
+    return;
+  }
+
+  palpitesCache = data || [];
+  renderPalpites();
+}
+
+async function confirmarPalpite() {
+  const feedback = document.getElementById("copy-feedback");
+  const nome = nomeInput.value.trim();
+  const gols1 = palpiteScores.time1;
+  const gols2 = palpiteScores.time2;
+
+  if (!nome || gols1 === null || gols2 === null) return;
+
+  if (!supabaseClient) {
+    feedback.textContent = "Supabase não conectado — não deu pra salvar.";
+    return;
+  }
+
+  btnCopiar.disabled = true;
+  feedback.textContent = "Salvando…";
+
+  const payload = {
+    nome,
+    gols_time1: gols1,
+    gols_time2: gols2,
+    updated_at: new Date().toISOString(),
+  };
+
+  const existing = palpitesCache.find(
+    (p) => p.nome.trim().toLowerCase() === nome.toLowerCase()
+  );
+
+  let error;
+  if (existing) {
+    ({ error } = await supabaseClient.from("palpites").update(payload).eq("id", existing.id));
+  } else {
+    ({ error } = await supabaseClient.from("palpites").insert(payload));
+  }
+
+  if (error) {
+    console.error(error);
+    feedback.textContent = "Não deu pra salvar. Tenta de novo.";
+    checkUnlock();
+    return;
+  }
+
+  feedback.textContent = "Palpite confirmado!";
+  setTimeout(() => (feedback.textContent = ""), 4000);
+  await loadPalpites();
+  checkUnlock();
+}
+
+document.getElementById("btn-copiar").addEventListener("click", confirmarPalpite);
 
 /* ---------- Lista de itens compartilhada (Supabase) ---------- */
 
@@ -300,6 +479,14 @@ if (supabaseClient) {
     .channel("items-changes")
     .on("postgres_changes", { event: "*", schema: "public", table: "items" }, () => loadItems())
     .subscribe();
+
+  loadPalpites();
+  supabaseClient
+    .channel("palpites-changes")
+    .on("postgres_changes", { event: "*", schema: "public", table: "palpites" }, () => loadPalpites())
+    .subscribe();
+} else {
+  loadPalpites();
 }
 
 /* ---------- Música ambiente ---------- */

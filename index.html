@@ -176,23 +176,53 @@
           <p class="card-plate-sub">04 · Bolão da final</p>
         </div>
         <div class="card-body">
-        <p class="card-hint warn" id="hint-bolao"><i class="ti ti-lock" aria-hidden="true"></i> Confirma presença e o Pix no card RSVP antes de enviar.</p>
-        <p class="card-hint">Ainda não sabemos quem chega na final — quando definir, é só chutar o placar!</p>
+        <p class="card-hint warn" id="hint-bolao"><i class="ti ti-lock" aria-hidden="true"></i> Confirma presença e o Pix do salão no card RSVP antes de enviar o palpite.</p>
+
+        <div class="bolao-info">
+          <p class="card-hint" style="margin-top:0">
+            O bolão é <strong>só pra se divertir</strong> — <strong>não é obrigatório</strong>. Entra quem quiser brincar.
+          </p>
+          <p class="card-hint">
+            Valor: <strong>R$ 15,00</strong>. O(s) ganhador(es) racham o prêmio — a ideia é sair pra jantar e essa galera não pagar. Estamos abertos a sugestões de prêmio!
+          </p>
+          <p class="card-hint small">Ainda não sabemos quem chega na final — quando definir, é só chutar o placar.</p>
+
+          <p class="card-hint small" style="margin-bottom:8px">
+            Pix pra brincar (mesma chave do salão):
+          </p>
+          <div class="pix-key-row">
+            <i class="ti ti-key" aria-hidden="true"></i>
+            <div class="pix-key-info">
+              <strong>Chave Pix (telefone)</strong>
+              <span id="pix-bolao-display">11 99522-2220 · Levi</span>
+            </div>
+            <button type="button" class="btn btn-outline btn-small" id="btn-copiar-pix-bolao">
+              <i class="ti ti-copy" aria-hidden="true"></i> Copiar
+            </button>
+          </div>
+        </div>
 
         <div class="palpite-row">
           <span class="palpite-time">Time 1</span>
-          <input type="number" id="gols-time1" min="0" max="20" placeholder="0" inputmode="numeric">
+          <button type="button" class="palpite-score" id="gols-time1" data-team="time1" aria-label="Escolher gols do Time 1">?</button>
           <span class="palpite-x">×</span>
-          <input type="number" id="gols-time2" min="0" max="20" placeholder="0" inputmode="numeric">
+          <button type="button" class="palpite-score" id="gols-time2" data-team="time2" aria-label="Escolher gols do Time 2">?</button>
           <span class="palpite-time">Time 2</span>
         </div>
 
         <div class="actions">
           <button type="button" id="btn-copiar" class="btn btn-dark" disabled>
-            <i class="ti ti-copy" aria-hidden="true"></i> Copiar confirmação
+            <i class="ti ti-check" aria-hidden="true"></i> Confirmar palpite
           </button>
         </div>
         <p id="copy-feedback" class="feedback" aria-live="polite"></p>
+
+        <div class="palpites-board" id="palpites-board">
+          <p class="food-group-label">Palpites da galera</p>
+          <div id="palpites-list">
+            <p class="card-hint">Ninguém chutou ainda — confirma o seu pra aparecer aqui.</p>
+          </div>
+        </div>
         </div>
       </section>
 
@@ -230,7 +260,20 @@
   </div>
 </div>
 
+<div class="score-modal" id="score-modal" hidden>
+  <div class="score-modal-backdrop" data-close-modal></div>
+  <div class="score-modal-panel" role="dialog" aria-modal="true" aria-labelledby="score-modal-title">
+    <div class="score-modal-header">
+      <p class="score-modal-title" id="score-modal-title">Gols — Time 1</p>
+      <button type="button" class="score-modal-close" data-close-modal aria-label="Fechar">
+        <i class="ti ti-x" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="score-modal-grid" id="score-modal-grid"></div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="script.js"></script>
+<script src="script.js?v=bolao-info"></script>
 </body>
 </html>
