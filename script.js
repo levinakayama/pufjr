@@ -513,21 +513,28 @@ const bgMusic = document.getElementById("bg-music");
 const musicToggle = document.getElementById("music-toggle");
 let musicPlaying = false;
 
+function setMusicUi(playing) {
+  musicPlaying = playing;
+  if (!musicToggle) return;
+  musicToggle.innerHTML = playing
+    ? '<i class="ti ti-music" aria-hidden="true"></i>'
+    : '<i class="ti ti-music-off" aria-hidden="true"></i>';
+  musicToggle.classList.toggle("playing", playing);
+  musicToggle.setAttribute("aria-label", playing ? "Pausar música ambiente" : "Tocar música ambiente");
+}
+
 if (musicToggle && bgMusic) {
   musicToggle.addEventListener("click", () => {
-    musicPlaying = !musicPlaying;
     if (musicPlaying) {
-      bgMusic.volume = 0.35;
-      bgMusic.play().catch(() => {
-        musicPlaying = false;
-      });
-      musicToggle.innerHTML = '<i class="ti ti-music" aria-hidden="true"></i>';
-      musicToggle.classList.add("playing");
-    } else {
       bgMusic.pause();
-      musicToggle.innerHTML = '<i class="ti ti-music-off" aria-hidden="true"></i>';
-      musicToggle.classList.remove("playing");
+      setMusicUi(false);
+      return;
     }
+    bgMusic.volume = 0.4;
+    bgMusic
+      .play()
+      .then(() => setMusicUi(true))
+      .catch(() => setMusicUi(false));
   });
 }
 

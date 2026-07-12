@@ -1,2 +1,5 @@
 .env
 .DS_Store
+YTDown*
+*.mp4
+!musica.mp4
