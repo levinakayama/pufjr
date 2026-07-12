@@ -2,26 +2,27 @@
    CONFIG — edite aqui as informações do evento
    ========================================================= */
 const CONFIG = {
-  // Data/hora da bola rolando, formato "AAAA-MM-DDTHH:MM:SS"
-  kickoff: "2026-07-05T17:00:00",
+  // Data/hora da bola rolando (final), formato "AAAA-MM-DDTHH:MM:SS" (horário de Brasília)
+  kickoff: "2026-07-19T16:00:00",
 
   // Link de convite do grupo do WhatsApp (Configurações do grupo > Convidar via link)
-  whatsappGroupLink: "https://chat.whatsapp.com/SEU_LINK_AQUI",
-};
+  whatsappGroupLink: "https://chat.whatsapp.com/L2fKSzdX2zdFamIN80Ixfh",
 
-// Palpites da galera pro bolão. Edite/adicione conforme forem confirmando pelo grupo.
-const PALPITES = [
-  { nome: "Exemplo — Rafa", br: 2, no: 1 },
-  { nome: "Exemplo — Maria", br: 1, no: 1 },
-  { nome: "Exemplo — João", br: 3, no: 0 },
-];
+  // Chave Pix mostrada no card RSVP (só o que aparece na tela; a cópia usa só os números)
+  pixKeyDisplay: "11 99522-2220 · Levi",
+  pixKeyCopy: "11995222220",
+
+  // Credenciais do Supabase (projeto > Settings > API). A "anon/publishable key" é pública,
+  // protegida por Row Level Security — não é segredo, pode ficar no código do site.
+  supabaseUrl: "https://ilibvwyupjyblxiwdfvx.supabase.co",
+  supabaseAnonKey: "sb_publishable_9dc-_7X49jRkr6nZ-prEMg_Fjej0Gsj",
+};
 
 /* ========================================================= */
 
-// Abre o grupo do WhatsApp (botão "Enviar no grupo" no card Bolão)
-document.getElementById("btn-enviar").addEventListener("click", () => {
-  window.open(CONFIG.whatsappGroupLink, "_blank");
-});
+// Link do grupo (botão "Entrar no grupo" no card RSVP, só fica clicável quando libera)
+const linkGrupoEl = document.getElementById("link-grupo");
+if (linkGrupoEl) linkGrupoEl.href = CONFIG.whatsappGroupLink;
 
 /* ---------- Countdown ---------- */
 
@@ -36,7 +37,7 @@ function updateCountdown() {
     label.textContent = "é hoje, bora!";
     diff = 0;
   } else {
-    label.textContent = "até a bola rolar";
+    label.textContent = "até a grande final";
   }
 
   const days = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -52,11 +53,11 @@ function updateCountdown() {
 updateCountdown();
 setInterval(updateCountdown, 1000);
 
-/* ---------- Chips e lista de itens selecionáveis ---------- */
+/* ---------- Chips (vem) ---------- */
 
-const selecoes = { vem: "", item: "" };
+const selecoes = { vem: "" };
 
-document.querySelectorAll(".chip, .food-row").forEach((el) => {
+document.querySelectorAll(".chip").forEach((el) => {
   el.addEventListener("click", () => {
     const group = el.dataset.group;
     document.querySelectorAll(`[data-group="${group}"]`).forEach((c) => c.classList.remove("selected"));
@@ -66,18 +67,60 @@ document.querySelectorAll(".chip, .food-row").forEach((el) => {
   });
 });
 
-/* ---------- Validação: nome + confirmação liberam lista/bolão ---------- */
+/* ---------- Pix: copiar chave + confirmar pagamento ---------- */
+
+const pixKeySpan = document.querySelector("#pix-box .pix-key-info span");
+if (pixKeySpan) pixKeySpan.textContent = CONFIG.pixKeyDisplay;
+
+document.getElementById("btn-copiar-pix").addEventListener("click", async () => {
+  const btn = document.getElementById("btn-copiar-pix");
+  const original = btn.innerHTML;
+  try {
+    await navigator.clipboard.writeText(CONFIG.pixKeyCopy);
+  } catch (e) {
+    const ta = document.createElement("textarea");
+    ta.value = CONFIG.pixKeyCopy;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    document.body.removeChild(ta);
+  }
+  btn.innerHTML = '<i class="ti ti-check" aria-hidden="true"></i> Copiado!';
+  setTimeout(() => (btn.innerHTML = original), 2000);
+});
+
+let pago = false;
+const chipPago = document.getElementById("chip-pago");
+chipPago.addEventListener("click", () => {
+  pago = !pago;
+  chipPago.classList.toggle("selected", pago);
+  chipPago.innerHTML = pago
+    ? '<i class="ti ti-check" aria-hidden="true"></i> Pix confirmado'
+    : '<i class="ti ti-checkbox" aria-hidden="true"></i> Já fiz o Pix de R$ 20,00';
+  checkUnlock();
+});
+
+/* ---------- Validação: nome + "Sim" + Pix liberam grupo/lista/bolão ---------- */
 
 const nomeInput = document.getElementById("nome");
 const btnCopiar = document.getElementById("btn-copiar");
-const btnEnviarRsvp = document.getElementById("btn-enviar");
+const pixBox = document.getElementById("pix-box");
+const hintPix = document.getElementById("hint-pix");
+const unlockActions = document.getElementById("unlock-actions");
 const hintLista = document.getElementById("hint-lista");
 const hintBolao = document.getElementById("hint-bolao");
 
 function checkUnlock() {
-  const pronto = nomeInput.value.trim().length > 0 && selecoes.vem !== "";
-  btnCopiar.disabled = !pronto;
-  btnEnviarRsvp.disabled = !pronto;
+  const confirmouPresenca = selecoes.vem === "Sim, com certeza!";
+  if (pixBox) pixBox.classList.toggle("visible", confirmouPresenca);
+
+  const pronto = confirmouPresenca && pago && nomeInput.value.trim().length > 0;
+
+  if (hintPix) hintPix.classList.toggle("visible", !pronto);
+  if (unlockActions) unlockActions.classList.toggle("visible", pronto);
+  if (btnCopiar) btnCopiar.disabled = !pronto;
   if (hintLista) hintLista.classList.toggle("visible", !pronto);
   if (hintBolao) hintBolao.classList.toggle("visible", !pronto);
 }
@@ -85,21 +128,20 @@ function checkUnlock() {
 nomeInput.addEventListener("input", checkUnlock);
 checkUnlock();
 
-/* ---------- RSVP: copiar / montar mensagem ---------- */
+/* ---------- Bolão: copiar confirmação ---------- */
 
 function montarMensagem() {
-  const nome = document.getElementById("nome").value.trim() || "(sem nome)";
+  const nome = nomeInput.value.trim() || "(sem nome)";
   const vem = selecoes.vem || "(não respondeu)";
-  const item = selecoes.item || "(não respondeu)";
-  const golsBr = document.getElementById("gols-br").value || "0";
-  const golsNo = document.getElementById("gols-no").value || "0";
+  const golsTime1 = document.getElementById("gols-time1").value || "0";
+  const golsTime2 = document.getElementById("gols-time2").value || "0";
 
   return (
-    `Confirmação — Churrasco Brasil x Noruega\n` +
+    `Confirmação — Churrasco da Grande Final\n` +
     `Nome: ${nome}\n` +
     `Vou: ${vem}\n` +
-    `Vou levar: ${item}\n` +
-    `Palpite (bolão): Brasil ${golsBr} x ${golsNo} Noruega`
+    `Pix (R$20 rateio salão): ${pago ? "pago" : "pendente"}\n` +
+    `Palpite (bolão): ${golsTime1} x ${golsTime2}`
   );
 }
 
@@ -125,62 +167,168 @@ document.getElementById("btn-copiar").addEventListener("click", async () => {
   setTimeout(() => (feedback.textContent = ""), 5000);
 });
 
-/* ---------- Placar ao vivo ---------- */
+/* ---------- Lista de itens compartilhada (Supabase) ---------- */
 
-let scoreBr = 0;
-let scoreNo = 0;
+const foodListEl = document.getElementById("food-list");
+let supabaseClient = null;
+let itemsCache = [];
 
-function renderScore() {
-  document.getElementById("score-br").textContent = scoreBr;
-  document.getElementById("score-no").textContent = scoreNo;
-  renderRanking();
+if (
+  window.supabase &&
+  CONFIG.supabaseUrl &&
+  CONFIG.supabaseAnonKey &&
+  !CONFIG.supabaseUrl.includes("SEU_")
+) {
+  supabaseClient = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey);
 }
 
-document.querySelectorAll(".ctrl-btn").forEach((btn) => {
-  btn.addEventListener("click", () => {
-    const team = btn.dataset.team;
-    const op = parseInt(btn.dataset.op, 10);
-    if (team === "br") scoreBr = Math.max(0, scoreBr + op);
-    if (team === "no") scoreNo = Math.max(0, scoreNo + op);
-    renderScore();
+function renderFoodList() {
+  if (!foodListEl) return;
+
+  if (!itemsCache.length) {
+    foodListEl.innerHTML = '<p class="card-hint">Nenhum item cadastrado ainda.</p>';
+    return;
+  }
+
+  const groups = [];
+  const groupIndex = {};
+  itemsCache.forEach((item) => {
+    if (!(item.category in groupIndex)) {
+      groupIndex[item.category] = groups.length;
+      groups.push({ category: item.category, items: [] });
+    }
+    groups[groupIndex[item.category]].items.push(item);
   });
-});
 
-document.getElementById("btn-reset-placar").addEventListener("click", () => {
-  scoreBr = 0;
-  scoreNo = 0;
-  renderScore();
-});
+  foodListEl.innerHTML = groups
+    .map(
+      (group) => `
+        <div class="food-group">
+          <p class="food-group-label">${group.category}</p>
+          <div class="food-items">
+            ${group.items
+              .map(
+                (item) => `
+                  <button type="button" class="food-row ${item.claimed_by ? "claimed" : ""}" data-id="${item.id}">
+                    <span>${item.name}</span>
+                    ${
+                      item.claimed_by
+                        ? `<span class="food-claimed-by"><i class="ti ti-check food-check" aria-hidden="true"></i>${item.claimed_by}</span>`
+                        : `<i class="ti ti-circle-plus food-check" aria-hidden="true"></i>`
+                    }
+                  </button>
+                `
+              )
+              .join("")}
+          </div>
+        </div>
+      `
+    )
+    .join("");
 
-/* ---------- Ranking do bolão ---------- */
-
-function renderRanking() {
-  const tbody = document.getElementById("ranking-body");
-  tbody.innerHTML = "";
-
-  const ranked = PALPITES.map((p) => {
-    const diff = Math.abs(scoreBr - p.br) + Math.abs(scoreNo - p.no);
-    return { ...p, diff };
-  }).sort((a, b) => a.diff - b.diff);
-
-  ranked.forEach((p) => {
-    const tr = document.createElement("tr");
-    if (p.diff === 0) tr.classList.add("winner");
-    const medalIcon = p.diff === 0 ? '<i class="ti ti-medal medal-icon" aria-hidden="true"></i>' : "";
-    tr.innerHTML = `
-      <td class="rank-name">${medalIcon}${p.nome}</td>
-      <td>${p.br} x ${p.no}</td>
-      <td>${p.diff}</td>
-    `;
-    tbody.appendChild(tr);
+  foodListEl.querySelectorAll(".food-row").forEach((btn) => {
+    btn.addEventListener("click", () => onItemClick(Number(btn.dataset.id)));
   });
 }
 
-renderScore();
+async function loadItems() {
+  if (!foodListEl) return;
+  if (!supabaseClient) {
+    foodListEl.innerHTML =
+      '<p class="card-hint">Lista ainda não conectada ao Supabase. Preenche CONFIG.supabaseUrl / supabaseAnonKey no script.js (veja o README).</p>';
+    return;
+  }
+  const { data, error } = await supabaseClient
+    .from("items")
+    .select("*")
+    .order("category", { ascending: true })
+    .order("sort_order", { ascending: true });
+
+  if (error) {
+    foodListEl.innerHTML = '<p class="card-hint">Não consegui carregar a lista agora. Recarrega a página.</p>';
+    console.error(error);
+    return;
+  }
+  itemsCache = data || [];
+  renderFoodList();
+}
+
+async function onItemClick(id) {
+  const item = itemsCache.find((i) => i.id === id);
+  if (!item || !supabaseClient) return;
+
+  const nome = nomeInput.value.trim();
+  if (!nome) {
+    alert("Preenche seu nome no card RSVP antes de escolher um item.");
+    return;
+  }
+
+  if (item.claimed_by) {
+    if (item.claimed_by !== nome) return; // já é de outra pessoa, ignora o clique
+    if (!confirm(`Liberar "${item.name}"? Você tinha marcado que ia trazer.`)) return;
+    const { error } = await supabaseClient
+      .from("items")
+      .update({ claimed_by: null, claimed_at: null })
+      .eq("id", id);
+    if (error) console.error(error);
+    return;
+  }
+
+  if (!confirm(`Confirma que você, ${nome}, vai levar "${item.name}"?`)) return;
+
+  const { data, error } = await supabaseClient
+    .from("items")
+    .update({ claimed_by: nome, claimed_at: new Date().toISOString() })
+    .eq("id", id)
+    .is("claimed_by", null)
+    .select();
+
+  if (error) {
+    console.error(error);
+    return;
+  }
+  if (!data || data.length === 0) {
+    alert("Ops, alguém acabou de pegar esse item. Atualizando a lista…");
+    loadItems();
+  }
+}
+
+loadItems();
+
+if (supabaseClient) {
+  supabaseClient
+    .channel("items-changes")
+    .on("postgres_changes", { event: "*", schema: "public", table: "items" }, () => loadItems())
+    .subscribe();
+}
+
+/* ---------- Música ambiente ---------- */
+
+const bgMusic = document.getElementById("bg-music");
+const musicToggle = document.getElementById("music-toggle");
+let musicPlaying = false;
+
+if (musicToggle && bgMusic) {
+  musicToggle.addEventListener("click", () => {
+    musicPlaying = !musicPlaying;
+    if (musicPlaying) {
+      bgMusic.volume = 0.35;
+      bgMusic.play().catch(() => {
+        musicPlaying = false;
+      });
+      musicToggle.innerHTML = '<i class="ti ti-music" aria-hidden="true"></i>';
+      musicToggle.classList.add("playing");
+    } else {
+      bgMusic.pause();
+      musicToggle.innerHTML = '<i class="ti ti-music-off" aria-hidden="true"></i>';
+      musicToggle.classList.remove("playing");
+    }
+  });
+}
 
 /* ---------- Navegação entre cards (tela única, sem scroll) ---------- */
 
-const TOTAL_CARDS = 5;
+const TOTAL_CARDS = 4;
 let currentCard = 0;
 
 const cardEls = Array.from(document.querySelectorAll(".card"));

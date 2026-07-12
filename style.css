@@ -630,6 +630,60 @@ input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
 .chip.selected { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
 .chip.selected i { color: var(--accent-ink); }
 
+/* ---------- Pix (card RSVP) ---------- */
+
+.pix-box {
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 13px;
+  margin-bottom: 14px;
+}
+
+.pix-box.visible { display: flex; }
+
+.pix-key-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pix-key-row > i { font-size: 18px; color: rgba(255,255,255,0.6); flex-shrink: 0; }
+
+.pix-key-info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.pix-key-info strong { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.5); }
+.pix-key-info span { font-size: 13.5px; font-weight: 700; color: #fff; }
+
+.btn-small { flex: 0 0 auto; min-width: 0; padding: 9px 12px; font-size: 10.5px; }
+
+.chip, .pay-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 13px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.24);
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  font-family: var(--body);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .15s ease;
+}
+
+.pay-toggle { width: 100%; justify-content: center; }
+.pay-toggle i { font-size: 15px; color: rgba(255,255,255,0.6); }
+.pay-toggle:hover { border-color: rgba(255,255,255,0.5); }
+.pay-toggle.selected { background: var(--whatsapp); border-color: var(--whatsapp); color: #fff; }
+.pay-toggle.selected i { color: #fff; }
+
+#unlock-actions { display: none; }
+#unlock-actions.visible { display: flex; }
+
 /* ---------- Lista de itens ---------- */
 
 .food-list {
@@ -689,6 +743,21 @@ input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
 
 .food-row.selected { font-weight: 800; }
 .food-row.selected .food-check { opacity: 1; transform: scale(1); color: var(--accent); }
+
+.food-row.claimed { opacity: 0.65; }
+.food-row.claimed .food-check { opacity: 1; transform: scale(1); color: var(--whatsapp); }
+
+.food-claimed-by {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--whatsapp);
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
 
 /* ---------- Bolão ---------- */
 
@@ -805,6 +874,32 @@ input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
 }
 
 .vs { display: none; }
+
+/* ---------- Botão de música ambiente ---------- */
+
+.music-toggle {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 30;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: rgba(10,10,10,0.55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all .15s ease;
+}
+
+.music-toggle:hover { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.music-toggle.playing { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 
 /* ---------- Marquee (esteira contínua) ---------- */
 
