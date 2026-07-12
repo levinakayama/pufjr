@@ -797,7 +797,17 @@ input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
   color: #fff;
 }
 
-.palpite-score:active { transform: scale(0.96); }
+.palpite-score:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.palpite-score:disabled:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.28);
+  color: rgba(255,255,255,0.55);
+}
 
 .palpite-score.filled {
   background: var(--accent);

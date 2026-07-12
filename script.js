@@ -124,6 +124,10 @@ const hintLista = document.getElementById("hint-lista");
 const hintBolao = document.getElementById("hint-bolao");
 const palpiteScores = { time1: null, time2: null };
 
+function isUnlocked() {
+  return selecoes.vem === "Sim, com certeza!" && pago && nomeInput.value.trim().length > 0;
+}
+
 function updateConfirmButtonLabel() {
   if (!btnCopiar) return;
   const placarPronto = palpiteScores.time1 !== null && palpiteScores.time2 !== null;
@@ -132,11 +136,18 @@ function updateConfirmButtonLabel() {
     : '<i class="ti ti-ball-football" aria-hidden="true"></i> Escolhe o placar';
 }
 
+function setScorePickersEnabled(enabled) {
+  document.querySelectorAll(".palpite-score").forEach((btn) => {
+    btn.disabled = !enabled;
+    btn.setAttribute("aria-disabled", enabled ? "false" : "true");
+  });
+}
+
 function checkUnlock() {
   const confirmouPresenca = selecoes.vem === "Sim, com certeza!";
   if (pixBox) pixBox.classList.toggle("visible", confirmouPresenca);
 
-  const pronto = confirmouPresenca && pago && nomeInput.value.trim().length > 0;
+  const pronto = isUnlocked();
   const placarPronto = palpiteScores.time1 !== null && palpiteScores.time2 !== null;
 
   if (hintPix) hintPix.classList.toggle("visible", !pronto);
@@ -144,6 +155,7 @@ function checkUnlock() {
   if (btnCopiar) btnCopiar.disabled = !(pronto && placarPronto);
   if (hintLista) hintLista.classList.toggle("visible", !pronto);
   if (hintBolao) hintBolao.classList.toggle("visible", !pronto);
+  setScorePickersEnabled(pronto);
   updateConfirmButtonLabel();
 }
 
@@ -172,6 +184,7 @@ function buildScoreGrid() {
 }
 
 function openScoreModal(team) {
+  if (!isUnlocked()) return;
   scoreModalTarget = team;
   const label = team === "time1" ? "Time 1" : "Time 2";
   scoreModalTitle.textContent = `Gols — ${label}`;
@@ -435,6 +448,11 @@ async function loadItems() {
 async function onItemClick(id) {
   const item = itemsCache.find((i) => i.id === id);
   if (!item || !supabaseClient) return;
+
+  if (!isUnlocked()) {
+    alert("Confirma presença e o Pix no card RSVP antes de escolher um item.");
+    return;
+  }
 
   const nome = nomeInput.value.trim();
   if (!nome) {
