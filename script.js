@@ -24,13 +24,8 @@ function updateCountdown() {
   const now = Date.now();
   let diff = target - now;
 
-  const label = document.getElementById("countdown-label");
-
   if (diff <= 0) {
-    label.textContent = "evento encerrado";
     diff = 0;
-  } else {
-    label.textContent = "evento encerrado";
   }
 
   const days = Math.floor(diff / (1000 * 60 * 60 * 24));
