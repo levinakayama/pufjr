@@ -641,3 +641,29 @@ if (cardDeckEl) {
 
 goToCard(0);
 
+/* ---------- Teoria (bandeira da Espanha) ---------- */
+
+(function setupTeoriaModal() {
+  const btn = document.getElementById("btn-teoria");
+  const modal = document.getElementById("teoria-modal");
+  if (!btn || !modal) return;
+
+  function openTeoria() {
+    modal.hidden = false;
+    document.body.classList.add("modal-open");
+  }
+
+  function closeTeoria() {
+    modal.hidden = true;
+    document.body.classList.remove("modal-open");
+  }
+
+  btn.addEventListener("click", openTeoria);
+  modal.addEventListener("click", (e) => {
+    if (e.target.closest("[data-close-teoria]")) closeTeoria();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !modal.hidden) closeTeoria();
+  });
+})();
+

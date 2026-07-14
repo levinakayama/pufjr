@@ -46,7 +46,12 @@
         <span class="line">CHURRASCO DA</span>
         <span class="line accent">GRANDE FINAL</span>
       </h1>
-      <p class="subtitle">Encerramos o evento. Empanada já garantida na final.</p>
+      <p class="subtitle">
+        Encerramos o evento. Empanada já garantida na final.
+        <button type="button" class="subtitle-flag" id="btn-teoria" aria-label="Ver teoria da Espanha">
+          <span class="fi fi-es" aria-hidden="true"></span>
+        </button>
+      </p>
 
       <div class="countdown" id="countdown">
         <div class="countdown-item"><span id="cd-days">00</span><small>dias</small></div>
@@ -272,7 +277,17 @@
   </div>
 </div>
 
+<div class="teoria-modal" id="teoria-modal" hidden>
+  <div class="teoria-modal-backdrop" data-close-teoria></div>
+  <div class="teoria-modal-panel" role="dialog" aria-modal="true" aria-label="Teoria">
+    <button type="button" class="teoria-modal-close" data-close-teoria aria-label="Fechar">
+      <i class="ti ti-x" aria-hidden="true"></i>
+    </button>
+    <img class="teoria-modal-img" src="teoria1.png" alt="Teoria — Junho e a Espanha">
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="script.js?v=empanada"></script>
+<script src="script.js?v=teoria-es"></script>
 </body>
 </html>
