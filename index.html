@@ -63,7 +63,7 @@
         <div class="card-header">
           <span class="card-blob blob-a" aria-hidden="true"></span>
           <span class="card-blob blob-b" aria-hidden="true"></span>
-          <span class="card-flag" aria-hidden="true"><span class="fi fi-fr"></span></span>
+          <span class="card-flag" aria-hidden="true"><span class="fi fi-es"></span></span>
         </div>
         <div class="card-plate">
           <p class="card-plate-title">Informações</p>
@@ -74,7 +74,7 @@
           <li><i class="ti ti-calendar" aria-hidden="true"></i><div><strong>Quando</strong><span>Domingo, 19 de julho</span></div></li>
           <li><i class="ti ti-clock" aria-hidden="true"></i><div><strong>Chegada</strong><span>13h · churrasco começa cedo</span></div></li>
           <li><i class="ti ti-ball-football" aria-hidden="true"></i><div><strong>Bola rolando</strong><span>16h (horário de Brasília)</span></div></li>
-          <li><i class="ti ti-trophy" aria-hidden="true"></i><div><strong>Quem chega na final</strong><span>Sai das semis: França × Espanha e Argentina × Inglaterra</span></div></li>
+          <li><i class="ti ti-trophy" aria-hidden="true"></i><div><strong>Quem chega na final</strong><span>Espanha já está na final · falta definir o adversário (Argentina × Inglaterra)</span></div></li>
           <li><i class="ti ti-map-pin" aria-hidden="true"></i><div><strong>Onde</strong><span>Casa do Fê Paiva — Alameda dos Arapanés, 178</span></div></li>
         </ul>
         <div class="actions">
@@ -185,7 +185,7 @@
           <p class="card-hint">
             Valor: <strong>R$ 15,00</strong>. O(s) ganhador(es) racham o prêmio — a ideia é sair pra jantar e essa galera não pagar. Estamos abertos a sugestões de prêmio!
           </p>
-          <p class="card-hint small">Ainda não sabemos quem chega na final — quando definir, é só chutar o placar.</p>
+          <p class="card-hint small">A Espanha já está na final. O outro finalista sai de Argentina × Inglaterra — chuta o placar!</p>
 
           <p class="card-hint small" style="margin-bottom:8px">
             Pix pra brincar (mesma chave do salão):
@@ -203,11 +203,11 @@
         </div>
 
         <div class="palpite-row">
-          <span class="palpite-time">Time 1</span>
-          <button type="button" class="palpite-score" id="gols-time1" data-team="time1" aria-label="Escolher gols do Time 1">?</button>
+          <span class="palpite-time"><span class="fi fi-es" aria-hidden="true"></span> Espanha</span>
+          <button type="button" class="palpite-score" id="gols-time1" data-team="time1" aria-label="Escolher gols da Espanha">?</button>
           <span class="palpite-x">×</span>
-          <button type="button" class="palpite-score" id="gols-time2" data-team="time2" aria-label="Escolher gols do Time 2">?</button>
-          <span class="palpite-time">Time 2</span>
+          <button type="button" class="palpite-score" id="gols-time2" data-team="time2" aria-label="Escolher gols do adversário">?</button>
+          <span class="palpite-time">Adversário</span>
         </div>
 
         <div class="actions">
@@ -244,7 +244,7 @@
       <span class="marquee-item">·</span>
       <span class="marquee-item"><i class="ti ti-chef-hat" aria-hidden="true"></i> CHURRASCO</span>
       <span class="marquee-item">·</span>
-      <span class="marquee-item"><span class="fi fi-fr"></span><span class="fi fi-es"></span> × <span class="fi fi-ar"></span><span class="fi fi-gb-eng"></span> OBRIGADO, GALERA</span>
+      <span class="marquee-item"><span class="fi fi-es"></span> ESPANHA NA FINAL × <span class="fi fi-ar"></span><span class="fi fi-gb-eng"></span> OBRIGADO, GALERA</span>
       <span class="marquee-item">·</span>
       <span class="marquee-item"><i class="ti ti-heart" aria-hidden="true"></i> ATÉ A PRÓXIMA</span>
       <span class="marquee-item">·</span>
@@ -252,7 +252,7 @@
       <span class="marquee-item">·</span>
       <span class="marquee-item"><i class="ti ti-chef-hat" aria-hidden="true"></i> CHURRASCO</span>
       <span class="marquee-item">·</span>
-      <span class="marquee-item"><span class="fi fi-fr"></span><span class="fi fi-es"></span> × <span class="fi fi-ar"></span><span class="fi fi-gb-eng"></span> OBRIGADO, GALERA</span>
+      <span class="marquee-item"><span class="fi fi-es"></span> ESPANHA NA FINAL × <span class="fi fi-ar"></span><span class="fi fi-gb-eng"></span> OBRIGADO, GALERA</span>
       <span class="marquee-item">·</span>
       <span class="marquee-item"><i class="ti ti-heart" aria-hidden="true"></i> ATÉ A PRÓXIMA</span>
       <span class="marquee-item">·</span>
@@ -264,7 +264,7 @@
   <div class="score-modal-backdrop" data-close-modal></div>
   <div class="score-modal-panel" role="dialog" aria-modal="true" aria-labelledby="score-modal-title">
     <div class="score-modal-header">
-      <p class="score-modal-title" id="score-modal-title">Gols — Time 1</p>
+      <p class="score-modal-title" id="score-modal-title">Gols — Espanha</p>
       <button type="button" class="score-modal-close" data-close-modal aria-label="Fechar">
         <i class="ti ti-x" aria-hidden="true"></i>
       </button>
@@ -274,6 +274,6 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="script.js?v=evento-encerrado"></script>
+<script src="script.js?v=espanha-final"></script>
 </body>
 </html>
