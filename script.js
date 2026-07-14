@@ -5,9 +5,6 @@ const CONFIG = {
   // Data/hora da bola rolando (final), formato "AAAA-MM-DDTHH:MM:SS" (horário de Brasília)
   kickoff: "2026-07-19T16:00:00",
 
-  // Link de convite do grupo do WhatsApp (Configurações do grupo > Convidar via link)
-  whatsappGroupLink: "https://chat.whatsapp.com/L2fKSzdX2zdFamIN80Ixfh",
-
   // Chave Pix mostrada no card RSVP (só o que aparece na tela; a cópia usa só os números)
   pixKeyDisplay: "11 99522-2220 · Levi",
   pixKeyCopy: "11995222220",
@@ -20,10 +17,6 @@ const CONFIG = {
 
 /* ========================================================= */
 
-// Link do grupo (botão "Entrar no grupo" no card RSVP, só fica clicável quando libera)
-const linkGrupoEl = document.getElementById("link-grupo");
-if (linkGrupoEl) linkGrupoEl.href = CONFIG.whatsappGroupLink;
-
 /* ---------- Countdown ---------- */
 
 function updateCountdown() {
@@ -34,10 +27,10 @@ function updateCountdown() {
   const label = document.getElementById("countdown-label");
 
   if (diff <= 0) {
-    label.textContent = "é hoje, bora!";
+    label.textContent = "evento encerrado";
     diff = 0;
   } else {
-    label.textContent = "até a grande final";
+    label.textContent = "evento encerrado";
   }
 
   const days = Math.floor(diff / (1000 * 60 * 60 * 24));

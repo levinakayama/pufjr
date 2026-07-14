@@ -570,6 +570,14 @@ i.ti { line-height: 1; }
 .btn-whatsapp { background: var(--whatsapp); border-color: var(--whatsapp); color: #fff; }
 .btn-whatsapp:hover { filter: brightness(1.08); }
 
+.btn-closed {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.28);
+  color: rgba(255,255,255,0.85);
+  cursor: default;
+  pointer-events: none;
+}
+
 .btn-dark { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 .btn-dark:hover { filter: brightness(1.05); }
 
