@@ -104,16 +104,22 @@ chipPago.addEventListener("click", () => {
 /* ---------- Validação: nome + "Sim" + Pix liberam grupo/lista/bolão ---------- */
 
 const nomeInput = document.getElementById("nome");
+const nomeBolaoInput = document.getElementById("nome-bolao");
 const btnCopiar = document.getElementById("btn-copiar");
 const pixBox = document.getElementById("pix-box");
 const hintPix = document.getElementById("hint-pix");
 const unlockActions = document.getElementById("unlock-actions");
 const hintLista = document.getElementById("hint-lista");
-const hintBolao = document.getElementById("hint-bolao");
 const palpiteScores = { time1: null, time2: null };
 
 function isUnlocked() {
   return selecoes.vem === "Sim, com certeza!" && pago && nomeInput.value.trim().length > 0;
+}
+
+function getNomeBolao() {
+  const doBolao = nomeBolaoInput ? nomeBolaoInput.value.trim() : "";
+  if (doBolao) return doBolao;
+  return nomeInput ? nomeInput.value.trim() : "";
 }
 
 function updateConfirmButtonLabel() {
@@ -131,24 +137,36 @@ function setScorePickersEnabled(enabled) {
   });
 }
 
+function updateBolaoConfirmState() {
+  const placarPronto = palpiteScores.time1 !== null && palpiteScores.time2 !== null;
+  const nomeOk = getNomeBolao().length > 0;
+  if (btnCopiar) btnCopiar.disabled = !(placarPronto && nomeOk);
+  updateConfirmButtonLabel();
+}
+
 function checkUnlock() {
   const confirmouPresenca = selecoes.vem === "Sim, com certeza!";
   if (pixBox) pixBox.classList.toggle("visible", confirmouPresenca);
 
   const pronto = isUnlocked();
-  const placarPronto = palpiteScores.time1 !== null && palpiteScores.time2 !== null;
 
   if (hintPix) hintPix.classList.toggle("visible", !pronto);
   if (unlockActions) unlockActions.classList.toggle("visible", pronto);
-  if (btnCopiar) btnCopiar.disabled = !(pronto && placarPronto);
   if (hintLista) hintLista.classList.toggle("visible", !pronto);
-  if (hintBolao) hintBolao.classList.toggle("visible", !pronto);
-  setScorePickersEnabled(pronto);
-  updateConfirmButtonLabel();
+  updateBolaoConfirmState();
 }
 
-nomeInput.addEventListener("input", checkUnlock);
+nomeInput.addEventListener("input", () => {
+  if (nomeBolaoInput && !nomeBolaoInput.value.trim() && nomeInput.value.trim()) {
+    nomeBolaoInput.value = nomeInput.value.trim();
+  }
+  checkUnlock();
+});
+if (nomeBolaoInput) {
+  nomeBolaoInput.addEventListener("input", updateBolaoConfirmState);
+}
 checkUnlock();
+setScorePickersEnabled(true);
 
 /* ---------- Bolão: modal de placar + confirmar palpite ---------- */
 
@@ -172,7 +190,6 @@ function buildScoreGrid() {
 }
 
 function openScoreModal(team) {
-  if (!isUnlocked()) return;
   scoreModalTarget = team;
   const label = team === "time1" ? "Argentina" : "Espanha";
   scoreModalTitle.textContent = `Gols — ${label}`;
@@ -197,7 +214,7 @@ function setPalpiteScore(team, value) {
     btn.textContent = String(value);
     btn.classList.add("filled");
   }
-  checkUnlock();
+  updateBolaoConfirmState();
 }
 
 buildScoreGrid();
@@ -300,11 +317,16 @@ async function loadPalpites() {
 
 async function confirmarPalpite() {
   const feedback = document.getElementById("copy-feedback");
-  const nome = nomeInput.value.trim();
+  const nome = getNomeBolao();
   const gols1 = palpiteScores.time1;
   const gols2 = palpiteScores.time2;
 
-  if (!nome || gols1 === null || gols2 === null) return;
+  if (!nome) {
+    feedback.textContent = "Coloca seu nome pra confirmar o palpite.";
+    if (nomeBolaoInput) nomeBolaoInput.focus();
+    return;
+  }
+  if (gols1 === null || gols2 === null) return;
 
   if (!supabaseClient) {
     feedback.textContent = "Supabase não conectado — não deu pra salvar.";
@@ -335,14 +357,14 @@ async function confirmarPalpite() {
   if (error) {
     console.error(error);
     feedback.textContent = "Não deu pra salvar. Tenta de novo.";
-    checkUnlock();
+    updateBolaoConfirmState();
     return;
   }
 
   feedback.textContent = "Palpite confirmado!";
   setTimeout(() => (feedback.textContent = ""), 4000);
   await loadPalpites();
-  checkUnlock();
+  updateBolaoConfirmState();
 }
 
 document.getElementById("btn-copiar").addEventListener("click", confirmarPalpite);

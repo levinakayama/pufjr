@@ -180,8 +180,6 @@
           <p class="card-plate-sub">04 · Bolão da final</p>
         </div>
         <div class="card-body">
-        <p class="card-hint warn" id="hint-bolao"><i class="ti ti-lock" aria-hidden="true"></i> Confirma presença e o Pix do salão no card RSVP antes de enviar o palpite.</p>
-
         <div class="bolao-info">
           <p class="card-hint" style="margin-top:0">
             O bolão é <strong>só pra se divertir</strong> — <strong>não é obrigatório</strong>. Entra quem quiser brincar.
@@ -205,6 +203,9 @@
             </button>
           </div>
         </div>
+
+        <label class="field-label" for="nome-bolao">Seu nome</label>
+        <input type="text" id="nome-bolao" placeholder="Como te chamamos?" autocomplete="nickname">
 
         <div class="palpite-row">
           <span class="palpite-time"><span class="fi fi-ar" aria-hidden="true"></span> Argentina</span>
@@ -288,6 +289,6 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="script.js?v=final-arg-esp"></script>
+<script src="script.js?v=bolao-livre"></script>
 </body>
 </html>
