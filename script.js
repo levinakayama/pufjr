@@ -174,7 +174,7 @@ function buildScoreGrid() {
 function openScoreModal(team) {
   if (!isUnlocked()) return;
   scoreModalTarget = team;
-  const label = team === "time1" ? "Espanha" : "Adversário";
+  const label = team === "time1" ? "Argentina" : "Espanha";
   scoreModalTitle.textContent = `Gols — ${label}`;
   const current = palpiteScores[team];
   scoreModalGrid.querySelectorAll(".score-pick").forEach((btn) => {
