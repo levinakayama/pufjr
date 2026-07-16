@@ -765,7 +765,7 @@ input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
 
 .pix-key-info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
 .pix-key-info strong { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.5); }
-.pix-key-info span { font-size: 13.5px; font-weight: 700; color: #fff; }
+.pix-key-info span { font-size: 13.5px; font-weight: 700; color: #fff; word-break: break-all; }
 
 .btn-small { flex: 0 0 auto; min-width: 0; padding: 9px 12px; font-size: 10.5px; }
 
@@ -1065,6 +1065,13 @@ body.modal-open { overflow: hidden; }
 }
 
 .bolao-info .card-hint { margin-bottom: 10px; }
+.bolao-info .card-hint.warn {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.bolao-info .card-hint.warn i { flex-shrink: 0; margin-top: 2px; }
 .bolao-info .pix-key-row { margin-top: 4px; }
 
 .palpites-board .food-group-label { margin-top: 0; }

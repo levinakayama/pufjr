@@ -5,9 +5,14 @@ const CONFIG = {
   // Data/hora da bola rolando (final), formato "AAAA-MM-DDTHH:MM:SS" (horário de Brasília)
   kickoff: "2026-07-19T16:00:00",
 
-  // Chave Pix mostrada no card RSVP (só o que aparece na tela; a cópia usa só os números)
+  // Chave Pix do rateio do salão (card RSVP)
   pixKeyDisplay: "11 99522-2220 · Levi",
   pixKeyCopy: "11995222220",
+
+  // Chave Pix aleatória do bolão
+  pixBolaoDisplay: "464f579c-a8ca-4c0e-8301-94725942cb27",
+  pixBolaoCopy: "464f579c-a8ca-4c0e-8301-94725942cb27",
+  pixBolaoValor: "R$ 15,00",
 
   // Credenciais do Supabase (projeto > Settings > API). A "anon/publishable key" é pública,
   // protegida por Row Level Security — não é segredo, pode ficar no código do site.
@@ -60,14 +65,15 @@ document.querySelectorAll(".chip").forEach((el) => {
 const pixKeySpan = document.querySelector("#pix-box .pix-key-info span");
 if (pixKeySpan) pixKeySpan.textContent = CONFIG.pixKeyDisplay;
 
-async function copiarPixKey(btn) {
+async function copiarPixKey(btn, chave) {
   if (!btn) return;
+  const texto = chave || CONFIG.pixKeyCopy;
   const original = btn.innerHTML;
   try {
-    await navigator.clipboard.writeText(CONFIG.pixKeyCopy);
+    await navigator.clipboard.writeText(texto);
   } catch (e) {
     const ta = document.createElement("textarea");
-    ta.value = CONFIG.pixKeyCopy;
+    ta.value = texto;
     ta.style.position = "fixed";
     ta.style.opacity = "0";
     document.body.appendChild(ta);
@@ -80,15 +86,15 @@ async function copiarPixKey(btn) {
 }
 
 document.getElementById("btn-copiar-pix")?.addEventListener("click", (e) => {
-  copiarPixKey(e.currentTarget);
+  copiarPixKey(e.currentTarget, CONFIG.pixKeyCopy);
 });
 
 document.getElementById("btn-copiar-pix-bolao")?.addEventListener("click", (e) => {
-  copiarPixKey(e.currentTarget);
+  copiarPixKey(e.currentTarget, CONFIG.pixBolaoCopy);
 });
 
 const pixBolaoDisplay = document.getElementById("pix-bolao-display");
-if (pixBolaoDisplay) pixBolaoDisplay.textContent = CONFIG.pixKeyDisplay;
+if (pixBolaoDisplay) pixBolaoDisplay.textContent = CONFIG.pixBolaoDisplay;
 
 let pago = false;
 const chipPago = document.getElementById("chip-pago");
