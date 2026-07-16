@@ -9,11 +9,6 @@ const CONFIG = {
   pixKeyDisplay: "11 99522-2220 · Levi",
   pixKeyCopy: "11995222220",
 
-  // Chave Pix aleatória do bolão
-  pixBolaoDisplay: "464f579c-a8ca-4c0e-8301-94725942cb27",
-  pixBolaoCopy: "464f579c-a8ca-4c0e-8301-94725942cb27",
-  pixBolaoValor: "R$ 15,00",
-
   // Credenciais do Supabase (projeto > Settings > API). A "anon/publishable key" é pública,
   // protegida por Row Level Security — não é segredo, pode ficar no código do site.
   supabaseUrl: "https://ilibvwyupjyblxiwdfvx.supabase.co",
@@ -89,13 +84,6 @@ document.getElementById("btn-copiar-pix")?.addEventListener("click", (e) => {
   copiarPixKey(e.currentTarget, CONFIG.pixKeyCopy);
 });
 
-document.getElementById("btn-copiar-pix-bolao")?.addEventListener("click", (e) => {
-  copiarPixKey(e.currentTarget, CONFIG.pixBolaoCopy);
-});
-
-const pixBolaoDisplay = document.getElementById("pix-bolao-display");
-if (pixBolaoDisplay) pixBolaoDisplay.textContent = CONFIG.pixBolaoDisplay;
-
 let pago = false;
 const chipPago = document.getElementById("chip-pago");
 chipPago.addEventListener("click", () => {
@@ -107,47 +95,16 @@ chipPago.addEventListener("click", () => {
   checkUnlock();
 });
 
-/* ---------- Validação: nome + "Sim" + Pix liberam grupo/lista/bolão ---------- */
+/* ---------- Validação: nome + "Sim" + Pix liberam a lista ---------- */
 
 const nomeInput = document.getElementById("nome");
-const nomeBolaoInput = document.getElementById("nome-bolao");
-const btnCopiar = document.getElementById("btn-copiar");
 const pixBox = document.getElementById("pix-box");
 const hintPix = document.getElementById("hint-pix");
 const unlockActions = document.getElementById("unlock-actions");
 const hintLista = document.getElementById("hint-lista");
-const palpiteScores = { time1: null, time2: null };
 
 function isUnlocked() {
   return selecoes.vem === "Sim, com certeza!" && pago && nomeInput.value.trim().length > 0;
-}
-
-function getNomeBolao() {
-  const doBolao = nomeBolaoInput ? nomeBolaoInput.value.trim() : "";
-  if (doBolao) return doBolao;
-  return nomeInput ? nomeInput.value.trim() : "";
-}
-
-function updateConfirmButtonLabel() {
-  if (!btnCopiar) return;
-  const placarPronto = palpiteScores.time1 !== null && palpiteScores.time2 !== null;
-  btnCopiar.innerHTML = placarPronto
-    ? '<i class="ti ti-check" aria-hidden="true"></i> Confirmar palpite'
-    : '<i class="ti ti-ball-football" aria-hidden="true"></i> Escolhe o placar';
-}
-
-function setScorePickersEnabled(enabled) {
-  document.querySelectorAll(".palpite-score").forEach((btn) => {
-    btn.disabled = !enabled;
-    btn.setAttribute("aria-disabled", enabled ? "false" : "true");
-  });
-}
-
-function updateBolaoConfirmState() {
-  const placarPronto = palpiteScores.time1 !== null && palpiteScores.time2 !== null;
-  const nomeOk = getNomeBolao().length > 0;
-  if (btnCopiar) btnCopiar.disabled = !(placarPronto && nomeOk);
-  updateConfirmButtonLabel();
 }
 
 function checkUnlock() {
@@ -159,221 +116,10 @@ function checkUnlock() {
   if (hintPix) hintPix.classList.toggle("visible", !pronto);
   if (unlockActions) unlockActions.classList.toggle("visible", pronto);
   if (hintLista) hintLista.classList.toggle("visible", !pronto);
-  updateBolaoConfirmState();
 }
 
-nomeInput.addEventListener("input", () => {
-  if (nomeBolaoInput && !nomeBolaoInput.value.trim() && nomeInput.value.trim()) {
-    nomeBolaoInput.value = nomeInput.value.trim();
-  }
-  checkUnlock();
-});
-if (nomeBolaoInput) {
-  nomeBolaoInput.addEventListener("input", updateBolaoConfirmState);
-}
+nomeInput.addEventListener("input", checkUnlock);
 checkUnlock();
-setScorePickersEnabled(true);
-
-/* ---------- Bolão: modal de placar + confirmar palpite ---------- */
-
-const scoreModal = document.getElementById("score-modal");
-const scoreModalTitle = document.getElementById("score-modal-title");
-const scoreModalGrid = document.getElementById("score-modal-grid");
-const palpitesListEl = document.getElementById("palpites-list");
-let scoreModalTarget = null;
-let palpitesCache = [];
-
-function buildScoreGrid() {
-  scoreModalGrid.innerHTML = "";
-  for (let n = 0; n <= 10; n++) {
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "score-pick";
-    btn.textContent = String(n);
-    btn.dataset.value = String(n);
-    scoreModalGrid.appendChild(btn);
-  }
-}
-
-function openScoreModal(team) {
-  scoreModalTarget = team;
-  const label = team === "time1" ? "Argentina" : "Espanha";
-  scoreModalTitle.textContent = `Gols — ${label}`;
-  const current = palpiteScores[team];
-  scoreModalGrid.querySelectorAll(".score-pick").forEach((btn) => {
-    btn.classList.toggle("selected", current !== null && btn.dataset.value === String(current));
-  });
-  scoreModal.hidden = false;
-  document.body.classList.add("modal-open");
-}
-
-function closeScoreModal() {
-  scoreModal.hidden = true;
-  scoreModalTarget = null;
-  document.body.classList.remove("modal-open");
-}
-
-function setPalpiteScore(team, value) {
-  palpiteScores[team] = value;
-  const btn = document.getElementById(team === "time1" ? "gols-time1" : "gols-time2");
-  if (btn) {
-    btn.textContent = String(value);
-    btn.classList.add("filled");
-  }
-  updateBolaoConfirmState();
-}
-
-buildScoreGrid();
-
-document.querySelectorAll(".palpite-score").forEach((btn) => {
-  btn.addEventListener("click", () => openScoreModal(btn.dataset.team));
-});
-
-scoreModalGrid.addEventListener("click", (e) => {
-  const pick = e.target.closest(".score-pick");
-  if (!pick || !scoreModalTarget) return;
-  setPalpiteScore(scoreModalTarget, Number(pick.dataset.value));
-  closeScoreModal();
-});
-
-scoreModal.addEventListener("click", (e) => {
-  if (e.target.closest("[data-close-modal]")) closeScoreModal();
-});
-
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && !scoreModal.hidden) closeScoreModal();
-});
-
-function escapeHtml(str) {
-  return String(str)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
-
-function renderPalpites() {
-  if (!palpitesListEl) return;
-
-  if (!palpitesCache.length) {
-    palpitesListEl.innerHTML =
-      '<p class="card-hint">Ninguém chutou ainda — confirma o seu pra aparecer aqui.</p>';
-    return;
-  }
-
-  const groupsMap = new Map();
-  palpitesCache.forEach((p) => {
-    const key = `${p.gols_time1}x${p.gols_time2}`;
-    if (!groupsMap.has(key)) {
-      groupsMap.set(key, {
-        gols1: p.gols_time1,
-        gols2: p.gols_time2,
-        nomes: [],
-      });
-    }
-    groupsMap.get(key).nomes.push(p.nome);
-  });
-
-  const groups = [...groupsMap.values()].sort((a, b) => {
-    if (b.nomes.length !== a.nomes.length) return b.nomes.length - a.nomes.length;
-    if (a.gols1 !== b.gols1) return a.gols1 - b.gols1;
-    return a.gols2 - b.gols2;
-  });
-
-  palpitesListEl.innerHTML = groups
-    .map((group) => {
-      const count = group.nomes.length;
-      const label = count === 1 ? "1 pessoa" : `${count} pessoas`;
-      return `
-        <div class="palpite-group">
-          <div class="palpite-group-score">
-            <span class="palpite-group-placar">${group.gols1} × ${group.gols2}</span>
-            <span class="palpite-group-count">${label}</span>
-          </div>
-          <p class="palpite-group-names">${group.nomes.map(escapeHtml).join(", ")}</p>
-        </div>
-      `;
-    })
-    .join("");
-}
-
-async function loadPalpites() {
-  if (!palpitesListEl) return;
-  if (!supabaseClient) {
-    palpitesListEl.innerHTML =
-      '<p class="card-hint">Bolão ainda não conectado ao Supabase.</p>';
-    return;
-  }
-
-  const { data, error } = await supabaseClient
-    .from("palpites")
-    .select("*")
-    .order("created_at", { ascending: true });
-
-  if (error) {
-    console.error(error);
-    palpitesListEl.innerHTML =
-      '<p class="card-hint">Não consegui carregar os palpites. Roda o <code>supabase_palpites.sql</code> no Supabase se ainda não rodou.</p>';
-    return;
-  }
-
-  palpitesCache = data || [];
-  renderPalpites();
-}
-
-async function confirmarPalpite() {
-  const feedback = document.getElementById("copy-feedback");
-  const nome = getNomeBolao();
-  const gols1 = palpiteScores.time1;
-  const gols2 = palpiteScores.time2;
-
-  if (!nome) {
-    feedback.textContent = "Coloca seu nome pra confirmar o palpite.";
-    if (nomeBolaoInput) nomeBolaoInput.focus();
-    return;
-  }
-  if (gols1 === null || gols2 === null) return;
-
-  if (!supabaseClient) {
-    feedback.textContent = "Supabase não conectado — não deu pra salvar.";
-    return;
-  }
-
-  btnCopiar.disabled = true;
-  feedback.textContent = "Salvando…";
-
-  const payload = {
-    nome,
-    gols_time1: gols1,
-    gols_time2: gols2,
-    updated_at: new Date().toISOString(),
-  };
-
-  const existing = palpitesCache.find(
-    (p) => p.nome.trim().toLowerCase() === nome.toLowerCase()
-  );
-
-  let error;
-  if (existing) {
-    ({ error } = await supabaseClient.from("palpites").update(payload).eq("id", existing.id));
-  } else {
-    ({ error } = await supabaseClient.from("palpites").insert(payload));
-  }
-
-  if (error) {
-    console.error(error);
-    feedback.textContent = "Não deu pra salvar. Tenta de novo.";
-    updateBolaoConfirmState();
-    return;
-  }
-
-  feedback.textContent = "Palpite confirmado!";
-  setTimeout(() => (feedback.textContent = ""), 4000);
-  await loadPalpites();
-  updateBolaoConfirmState();
-}
-
-document.getElementById("btn-copiar").addEventListener("click", confirmarPalpite);
 
 /* ---------- Lista de itens compartilhada (Supabase) ---------- */
 
@@ -513,14 +259,6 @@ if (supabaseClient) {
     .channel("items-changes")
     .on("postgres_changes", { event: "*", schema: "public", table: "items" }, () => loadItems())
     .subscribe();
-
-  loadPalpites();
-  supabaseClient
-    .channel("palpites-changes")
-    .on("postgres_changes", { event: "*", schema: "public", table: "palpites" }, () => loadPalpites())
-    .subscribe();
-} else {
-  loadPalpites();
 }
 
 /* ---------- Música ambiente ---------- */
@@ -556,7 +294,7 @@ if (musicToggle && bgMusic) {
 
 /* ---------- Navegação entre cards (tela única, sem scroll) ---------- */
 
-const TOTAL_CARDS = 4;
+const TOTAL_CARDS = 3;
 let currentCard = 0;
 
 const cardEls = Array.from(document.querySelectorAll(".card"));

@@ -28,7 +28,6 @@
       <button type="button" class="nav-link active" data-card="0">Info</button>
       <button type="button" class="nav-link" data-card="1">RSVP</button>
       <button type="button" class="nav-link" data-card="2">Lista</button>
-      <button type="button" class="nav-link" data-card="3">Bolão</button>
     </nav>
   </header>
 
@@ -37,7 +36,6 @@
       <span class="dot active" data-card="0"></span>
       <span class="dot" data-card="1"></span>
       <span class="dot" data-card="2"></span>
-      <span class="dot" data-card="3"></span>
     </div>
 
     <div class="stage-title">
@@ -162,79 +160,6 @@
         <div class="food-list" id="food-list">
           <p class="card-hint">Carregando lista…</p>
         </div>
-
-        <button type="button" class="btn btn-dark card-next-btn" data-goto="3">
-          Ir pro bolão <i class="ti ti-arrow-right" aria-hidden="true"></i>
-        </button>
-        </div>
-      </section>
-
-      <section class="card" data-card="3" id="card-bolao">
-        <div class="card-header">
-          <span class="card-blob blob-a" aria-hidden="true"></span>
-          <span class="card-blob blob-b" aria-hidden="true"></span>
-          <span class="card-flag" aria-hidden="true"><span class="fi fi-ar"></span></span>
-        </div>
-        <div class="card-plate">
-          <p class="card-plate-title">Seu palpite</p>
-          <p class="card-plate-sub">04 · Bolão da final</p>
-        </div>
-        <div class="card-body">
-        <div class="bolao-info">
-          <p class="card-hint" style="margin-top:0">
-            Fala meus amores! hahahaha
-          </p>
-          <p class="card-hint">
-            Nós vamos fazer um bolão pros palpites do jogo da Copa. Quem quiser colocar uma grana pra gente fazer uma brincadeira, pode colocar; quem quiser só participar pra brincar também tá liberado — o amor é o mesmo. hahahaha
-          </p>
-          <p class="card-hint">
-            Valor pra brincar: <strong>R$ 15,00</strong>.
-          </p>
-          <p class="card-hint warn">
-            <i class="ti ti-alert-circle" aria-hidden="true"></i>
-            <span><strong>AVISO IMPORTANTE:</strong> conhecemos todos vocês e acreditamos que estamos em um grupo de amigos e de irmãos e irmãs maduros. Talvez nem todos se conheçam entre si, mas tomamos cuidado pra chamar pessoas conhecidas aqui — até porque o Felipe Paiva está abrindo a porta da casa dele pra nós. Caso você não se sinta à vontade, o jogo é apenas uma diversão entre os amigos por conta da final da Copa. Fique à vontade pra escolher participar ou não.</span>
-          </p>
-          <p class="card-hint small">Final: Argentina × Espanha — chuta o placar!</p>
-
-          <p class="card-hint small" style="margin-bottom:8px">
-            Pix do bolão (chave aleatória):
-          </p>
-          <div class="pix-key-row">
-            <i class="ti ti-key" aria-hidden="true"></i>
-            <div class="pix-key-info">
-              <strong>Chave Pix (aleatória)</strong>
-              <span id="pix-bolao-display">464f579c-a8ca-4c0e-8301-94725942cb27</span>
-            </div>
-            <button type="button" class="btn btn-outline btn-small" id="btn-copiar-pix-bolao">
-              <i class="ti ti-copy" aria-hidden="true"></i> Copiar
-            </button>
-          </div>
-        </div>
-
-        <label class="field-label" for="nome-bolao">Seu nome</label>
-        <input type="text" id="nome-bolao" placeholder="Como te chamamos?" autocomplete="nickname">
-
-        <div class="palpite-row">
-          <span class="palpite-time"><span class="fi fi-ar" aria-hidden="true"></span> Argentina</span>
-          <button type="button" class="palpite-score" id="gols-time1" data-team="time1" aria-label="Escolher gols da Argentina">?</button>
-          <span class="palpite-x">×</span>
-          <button type="button" class="palpite-score" id="gols-time2" data-team="time2" aria-label="Escolher gols da Espanha">?</button>
-          <span class="palpite-time"><span class="fi fi-es" aria-hidden="true"></span> Espanha</span>
-        </div>
-
-        <div class="actions">
-          <button type="button" id="btn-copiar" class="btn btn-dark" disabled>
-            <i class="ti ti-check" aria-hidden="true"></i> Confirmar palpite
-          </button>
-        </div>
-        <p id="copy-feedback" class="feedback" aria-live="polite"></p>
-
-        <div class="palpites-board" id="palpites-board">
-          <p class="food-group-label">Palpites da galera</p>
-          <div id="palpites-list">
-            <p class="card-hint">Ninguém chutou ainda — confirma o seu pra aparecer aqui.</p>
-          </div>
-        </div>
         </div>
       </section>
 
@@ -243,7 +168,7 @@
         <div class="card-counter">
           <span id="card-current">01</span>
           <span class="counter-track"><span class="counter-fill" id="counter-fill"></span></span>
-          <span>04</span>
+          <span>03</span>
         </div>
         <button class="ctrl-arrow" id="btn-next" aria-label="Próximo card"><i class="ti ti-arrow-right" aria-hidden="true"></i></button>
       </div>
@@ -272,19 +197,6 @@
   </div>
 </div>
 
-<div class="score-modal" id="score-modal" hidden>
-  <div class="score-modal-backdrop" data-close-modal></div>
-  <div class="score-modal-panel" role="dialog" aria-modal="true" aria-labelledby="score-modal-title">
-    <div class="score-modal-header">
-      <p class="score-modal-title" id="score-modal-title">Gols — Argentina</p>
-      <button type="button" class="score-modal-close" data-close-modal aria-label="Fechar">
-        <i class="ti ti-x" aria-hidden="true"></i>
-      </button>
-    </div>
-    <div class="score-modal-grid" id="score-modal-grid"></div>
-  </div>
-</div>
-
 <div class="teoria-modal" id="teoria-modal" hidden>
   <div class="teoria-modal-backdrop" data-close-teoria></div>
   <div class="teoria-modal-panel" role="dialog" aria-modal="true" aria-label="Teoria">
@@ -296,6 +208,6 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="script.js?v=bolao-texto-pix"></script>
+<script src="script.js?v=sem-bolao"></script>
 </body>
 </html>
