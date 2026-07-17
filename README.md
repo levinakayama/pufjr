@@ -1,24 +1,23 @@
 # Churrasco da Grande Final
 
-Site simples (HTML/CSS/JS, sem servidor próprio) pra organizar o churrasco: confirmação de presença, pagamento do rateio via Pix e lista de itens compartilhada (via Supabase).
+Site simples (HTML/CSS/JS, sem servidor próprio) pra organizar o churrasco: informações do evento e lista de itens compartilhada (via Supabase).
 
 ## Como usar
 
-Abra o `index.html` no navegador (celular ou computador). Não precisa instalar nada — mas a lista de itens (card 3) só funciona depois de configurar o Supabase (veja abaixo).
+Abra o `index.html` no navegador (celular ou computador). Não precisa instalar nada — mas a lista de itens só funciona depois de configurar o Supabase (veja abaixo).
 
 Pra hospedar num link (pra mandar pro grupo), suba a pasta pro GitHub e depois importe no Vercel — já configuramos isso junto.
 
-## Design: tela única com 3 cards navegáveis
+## Design: tela única com 2 cards navegáveis
 
-O site é uma tela fixa (não rola), com uma foto de fundo panorâmica que desliza conforme você troca de card, e um menu com pílula verde animada no topo. Os 3 cards, em ordem:
+O site é uma tela fixa (não rola), com uma foto de fundo panorâmica que desliza conforme você troca de card, e um menu com pílula verde animada no topo. Os 2 cards, em ordem:
 
 1. **Informações** — data (19/07), horário, endereço, final Argentina × Espanha.
-2. **RSVP + Pix** — nome, "vai vir?", chave Pix do rateio (R$ 20) e um botão "já paguei". Só depois de confirmar presença como "Sim" **e** marcar o Pix como pago é que libera o acesso à lista.
-3. **Lista** — itens do churrasco, compartilhados em tempo real entre todo mundo (Supabase). Cada pessoa toca num item pra marcar que vai levar; some pra todo mundo na hora.
+2. **Lista** — itens do churrasco, compartilhados em tempo real entre todo mundo (Supabase). A pessoa coloca o nome e toca num item pra marcar que vai levar.
 
 ## Configuração obrigatória: Supabase (lista de itens)
 
-A lista de itens (card 3) precisa de um banco de dados pra funcionar entre ~20-30 pessoas ao mesmo tempo — sem isso, cada celular veria uma lista separada, o que não serve pro objetivo (saber quem já pegou o quê).
+A lista de itens precisa de um banco de dados pra funcionar entre ~20-30 pessoas ao mesmo tempo — sem isso, cada celular veria uma lista separada, o que não serve pro objetivo (saber quem já pegou o quê).
 
 Passo a passo:
 
@@ -38,24 +37,12 @@ Tudo fica centralizado no topo do arquivo `script.js`:
 ```js
 const CONFIG = {
   kickoff: "2026-07-19T16:00:00",   // data/hora da final, horário de Brasília (usado no contador)
-  pixKeyDisplay: "...",  // o que aparece na tela
-  pixKeyCopy: "...",     // o que é copiado ao clicar em "Copiar"
   supabaseUrl: "https://ilibvwyupjyblxiwdfvx.supabase.co",
   supabaseAnonKey: "sb_publishable_...",
 };
 ```
 
 - **`kickoff`**: horário oficial da final é 15h (horário do estádio, em Nova Jersey/EUA) — convertido pra horário de Brasília dá **16h**. Ajuste se a FIFA mudar o horário.
-- **`pixKeyDisplay` / `pixKeyCopy`**: chave Pix mostrada e copiada no card RSVP — edite no `script.js` (não coloque valores reais no README).
-
-## Fluxo de RSVP + Pix (card 2)
-
-1. Pessoa preenche nome e marca "Sim, com certeza" → aparece a caixa do Pix.
-2. Copia a chave Pix (botão "Copiar") e faz o pagamento de R$ 20 (rateio do salão de festas) por fora do site.
-3. Clica em "Já fiz o Pix de R$ 20,00" pra confirmar.
-4. Só então libera o acesso à Lista.
-
-Não existe verificação automática do pagamento (o site não tem acesso à sua conta bancária) — é um sistema de honra, como o "rateio" de qualquer churrasco entre amigos.
 
 ## Música ambiente
 

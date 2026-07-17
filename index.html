@@ -26,8 +26,7 @@
     <nav class="nav-pill" id="card-nav" aria-label="Ir para etapa">
       <span class="nav-indicator" id="nav-indicator" aria-hidden="true"></span>
       <button type="button" class="nav-link active" data-card="0">Info</button>
-      <button type="button" class="nav-link" data-card="1">RSVP</button>
-      <button type="button" class="nav-link" data-card="2">Lista</button>
+      <button type="button" class="nav-link" data-card="1">Lista</button>
     </nav>
   </header>
 
@@ -35,7 +34,6 @@
     <div class="dot-rail" id="dot-rail" aria-hidden="true">
       <span class="dot active" data-card="0"></span>
       <span class="dot" data-card="1"></span>
-      <span class="dot" data-card="2"></span>
     </div>
 
     <div class="stage-title">
@@ -83,67 +81,14 @@
           <a class="btn btn-outline" href="https://www.google.com/maps/search/?api=1&query=Alameda+dos+Arapan%C3%A9s%2C+178" target="_blank" rel="noopener">
             <i class="ti ti-map-pin" aria-hidden="true"></i> Ver no mapa
           </a>
-        </div>
-        </div>
-      </section>
-
-      <section class="card" data-card="1" id="card-rsvp">
-        <div class="card-header">
-          <span class="card-blob blob-a" aria-hidden="true"></span>
-          <span class="card-blob blob-b" aria-hidden="true"></span>
-          <span class="card-flag" aria-hidden="true"><span class="fi fi-es"></span></span>
-        </div>
-        <div class="card-plate">
-          <p class="card-plate-title">Confirmar presença</p>
-          <p class="card-plate-sub">02 · RSVP + Pix</p>
-        </div>
-        <div class="card-body">
-        <p class="card-hint">As inscrições já se encerraram.</p>
-
-        <label class="field-label" for="nome">Seu nome</label>
-        <input type="text" id="nome" placeholder="Como te chamamos?" required>
-
-        <p class="field-label">Vai vir?</p>
-        <div class="chip-group" id="chips-vem" role="radiogroup" aria-label="Vai vir?">
-          <button type="button" class="chip" data-value="Sim, com certeza!" data-group="vem">
-            <i class="ti ti-mood-smile" aria-hidden="true"></i> Sim, com certeza
-          </button>
-          <button type="button" class="chip" data-value="Não vou conseguir" data-group="vem">
-            <i class="ti ti-mood-sad" aria-hidden="true"></i> Não vou
-          </button>
-        </div>
-
-        <div class="pix-box" id="pix-box">
-          <p class="card-hint small" style="margin-top:0">Rateio do salão de festas — <strong>R$ 20,00</strong> por pessoa, via Pix:</p>
-          <div class="pix-key-row">
-            <i class="ti ti-key" aria-hidden="true"></i>
-            <div class="pix-key-info">
-              <strong>Chave Pix (telefone)</strong>
-              <span>11 99522-2220 · Levi</span>
-            </div>
-            <button type="button" class="btn btn-outline btn-small" id="btn-copiar-pix">
-              <i class="ti ti-copy" aria-hidden="true"></i> Copiar
-            </button>
-          </div>
-          <button type="button" class="pay-toggle" id="chip-pago">
-            <i class="ti ti-checkbox" aria-hidden="true"></i> Já fiz o Pix de R$ 20,00
-          </button>
-        </div>
-
-        <p class="card-hint warn" id="hint-pix"><i class="ti ti-lock" aria-hidden="true"></i> Confirma presença como "Sim" e o Pix pra liberar o grupo e a lista de itens.</p>
-
-        <div class="actions" id="unlock-actions">
-          <span class="btn btn-closed" aria-disabled="true">
-            <i class="ti ti-circle-check" aria-hidden="true"></i> Inscrições encerradas
-          </span>
-          <button type="button" class="btn btn-dark card-next-btn" data-goto="2">
+          <button type="button" class="btn btn-dark card-next-btn" data-goto="1">
             Ver a lista de itens <i class="ti ti-arrow-right" aria-hidden="true"></i>
           </button>
         </div>
         </div>
       </section>
 
-      <section class="card" data-card="2" id="card-lista">
+      <section class="card" data-card="1" id="card-lista">
         <div class="card-header">
           <span class="card-blob blob-a" aria-hidden="true"></span>
           <span class="card-blob blob-b" aria-hidden="true"></span>
@@ -151,10 +96,12 @@
         </div>
         <div class="card-plate">
           <p class="card-plate-title">Lista de itens</p>
-          <p class="card-plate-sub">03 · O que vai trazer</p>
+          <p class="card-plate-sub">02 · O que vai trazer</p>
         </div>
         <div class="card-body">
-        <p class="card-hint warn" id="hint-lista"><i class="ti ti-lock" aria-hidden="true"></i> Confirma presença e o Pix no card RSVP antes de escolher.</p>
+        <label class="field-label" for="nome">Seu nome</label>
+        <input type="text" id="nome" placeholder="Como te chamamos?" autocomplete="nickname">
+
         <p class="card-hint">Toca num item pra marcar que você vai levar.</p>
 
         <div class="food-list" id="food-list">
@@ -168,7 +115,7 @@
         <div class="card-counter">
           <span id="card-current">01</span>
           <span class="counter-track"><span class="counter-fill" id="counter-fill"></span></span>
-          <span>03</span>
+          <span>02</span>
         </div>
         <button class="ctrl-arrow" id="btn-next" aria-label="Próximo card"><i class="ti ti-arrow-right" aria-hidden="true"></i></button>
       </div>
@@ -203,11 +150,11 @@
     <button type="button" class="teoria-modal-close" data-close-teoria aria-label="Fechar">
       <i class="ti ti-x" aria-hidden="true"></i>
     </button>
-    <img class="teoria-modal-img" src="teoria1.png" alt="Teoria — Junho e a Espanha">
+    <img class="teoria-modal-img" src="teoria1.png" alt="Teoria — junho e a Espanha">
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="script.js?v=sem-bolao"></script>
+<script src="script.js?v=sem-rsvp"></script>
 </body>
 </html>

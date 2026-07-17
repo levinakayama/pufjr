@@ -5,10 +5,6 @@ const CONFIG = {
   // Data/hora da bola rolando (final), formato "AAAA-MM-DDTHH:MM:SS" (horário de Brasília)
   kickoff: "2026-07-19T16:00:00",
 
-  // Chave Pix do rateio do salão (card RSVP)
-  pixKeyDisplay: "11 99522-2220 · Levi",
-  pixKeyCopy: "11995222220",
-
   // Credenciais do Supabase (projeto > Settings > API). A "anon/publishable key" é pública,
   // protegida por Row Level Security — não é segredo, pode ficar no código do site.
   supabaseUrl: "https://ilibvwyupjyblxiwdfvx.supabase.co",
@@ -41,88 +37,9 @@ function updateCountdown() {
 updateCountdown();
 setInterval(updateCountdown, 1000);
 
-/* ---------- Chips (vem) ---------- */
-
-const selecoes = { vem: "" };
-
-document.querySelectorAll(".chip").forEach((el) => {
-  el.addEventListener("click", () => {
-    const group = el.dataset.group;
-    document.querySelectorAll(`[data-group="${group}"]`).forEach((c) => c.classList.remove("selected"));
-    el.classList.add("selected");
-    selecoes[group] = el.dataset.value;
-    checkUnlock();
-  });
-});
-
-/* ---------- Pix: copiar chave + confirmar pagamento ---------- */
-
-const pixKeySpan = document.querySelector("#pix-box .pix-key-info span");
-if (pixKeySpan) pixKeySpan.textContent = CONFIG.pixKeyDisplay;
-
-async function copiarPixKey(btn, chave) {
-  if (!btn) return;
-  const texto = chave || CONFIG.pixKeyCopy;
-  const original = btn.innerHTML;
-  try {
-    await navigator.clipboard.writeText(texto);
-  } catch (e) {
-    const ta = document.createElement("textarea");
-    ta.value = texto;
-    ta.style.position = "fixed";
-    ta.style.opacity = "0";
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand("copy");
-    document.body.removeChild(ta);
-  }
-  btn.innerHTML = '<i class="ti ti-check" aria-hidden="true"></i> Copiado!';
-  setTimeout(() => (btn.innerHTML = original), 2000);
-}
-
-document.getElementById("btn-copiar-pix")?.addEventListener("click", (e) => {
-  copiarPixKey(e.currentTarget, CONFIG.pixKeyCopy);
-});
-
-let pago = false;
-const chipPago = document.getElementById("chip-pago");
-chipPago.addEventListener("click", () => {
-  pago = !pago;
-  chipPago.classList.toggle("selected", pago);
-  chipPago.innerHTML = pago
-    ? '<i class="ti ti-check" aria-hidden="true"></i> Pix confirmado'
-    : '<i class="ti ti-checkbox" aria-hidden="true"></i> Já fiz o Pix de R$ 20,00';
-  checkUnlock();
-});
-
-/* ---------- Validação: nome + "Sim" + Pix liberam a lista ---------- */
-
-const nomeInput = document.getElementById("nome");
-const pixBox = document.getElementById("pix-box");
-const hintPix = document.getElementById("hint-pix");
-const unlockActions = document.getElementById("unlock-actions");
-const hintLista = document.getElementById("hint-lista");
-
-function isUnlocked() {
-  return selecoes.vem === "Sim, com certeza!" && pago && nomeInput.value.trim().length > 0;
-}
-
-function checkUnlock() {
-  const confirmouPresenca = selecoes.vem === "Sim, com certeza!";
-  if (pixBox) pixBox.classList.toggle("visible", confirmouPresenca);
-
-  const pronto = isUnlocked();
-
-  if (hintPix) hintPix.classList.toggle("visible", !pronto);
-  if (unlockActions) unlockActions.classList.toggle("visible", pronto);
-  if (hintLista) hintLista.classList.toggle("visible", !pronto);
-}
-
-nomeInput.addEventListener("input", checkUnlock);
-checkUnlock();
-
 /* ---------- Lista de itens compartilhada (Supabase) ---------- */
 
+const nomeInput = document.getElementById("nome");
 const foodListEl = document.getElementById("food-list");
 let supabaseClient = null;
 let itemsCache = [];
@@ -211,14 +128,10 @@ async function onItemClick(id) {
   const item = itemsCache.find((i) => i.id === id);
   if (!item || !supabaseClient) return;
 
-  if (!isUnlocked()) {
-    alert("Confirma presença e o Pix no card RSVP antes de escolher um item.");
-    return;
-  }
-
-  const nome = nomeInput.value.trim();
+  const nome = nomeInput ? nomeInput.value.trim() : "";
   if (!nome) {
-    alert("Preenche seu nome no card RSVP antes de escolher um item.");
+    alert("Coloca seu nome antes de escolher um item.");
+    if (nomeInput) nomeInput.focus();
     return;
   }
 
@@ -294,7 +207,7 @@ if (musicToggle && bgMusic) {
 
 /* ---------- Navegação entre cards (tela única, sem scroll) ---------- */
 
-const TOTAL_CARDS = 3;
+const TOTAL_CARDS = 2;
 let currentCard = 0;
 
 const cardEls = Array.from(document.querySelectorAll(".card"));
@@ -321,7 +234,6 @@ function goToCard(index) {
 
   updateBgPan();
   updateNavIndicator();
-  checkUnlock();
 }
 
 /* ---------- Pílula do menu: desliza e redimensiona até o item ativo ---------- */
